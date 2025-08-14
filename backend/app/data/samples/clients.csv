@@ -1,0 +1,4 @@
+client_id,risk_profile,kyc_status,dormant_flag
+c1,LOW,VERIFIED,false
+c2,LOW,VERIFIED,true
+c3,MED,VERIFIED,false

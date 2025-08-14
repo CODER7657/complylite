@@ -1,0 +1,13 @@
+rules:
+  - id: self_trade_same_day
+    name: Self trade same day (sample)
+    severity: high
+    description: Flags clients buying and selling the same symbol on the same day.
+  - id: cancel_burst
+    name: High cancel ratio (sample)
+    severity: medium
+    description: Flags clients with >80% order cancels in short windows.
+  - id: suitability_breach
+    name: Suitability breach vs risk profile (sample)
+    severity: high
+    description: Flags low-risk clients trading high-risk products.

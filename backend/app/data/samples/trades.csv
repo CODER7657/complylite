@@ -1,0 +1,3 @@
+trade_id,order_id,client_id,symbol,side,qty,price,time
+t1,o1,c1,EQ_BLUECHIP,BUY,100,100.5,2025-08-01T10:00:02Z
+t2,o2,c1,EQ_BLUECHIP,SELL,100,101.0,2025-08-01T10:10:06Z
