@@ -1,17 +1,25 @@
-import duckdb
 import json
 import uuid
 from datetime import datetime
 from app.core.database import get_db_connection
+from app.core.rules import load_rules
 
 class ComplianceDetector:
-    def __init__(self):
-        self.conn = get_db_connection()
+    def __init__(self, conn=None):
+        # Use provided app-scoped connection if available, else create one
+        self.conn = conn or get_db_connection()
+        self.rules = load_rules()
     
     def detect_self_trades(self):
         """Detect potential self-trading patterns"""
         try:
-            query = """
+            cfg = self.rules.get('self_trade_detection', {})
+            min_offset = int(cfg.get('min_offsetting_trades', 2))
+            min_pairs = int(cfg.get('min_trade_pairs', 4))
+            max_hours = int(cfg.get('max_hours_window', 24))
+            high_ratio = float(cfg.get('high_severity_ratio', 0.7))
+
+            query = f"""
             WITH self_trade_analysis AS (
                 SELECT 
                     t1.client_id,
@@ -23,12 +31,12 @@ class ComplianceDetector:
                 JOIN trades t2 ON t1.client_id = t2.client_id 
                               AND t1.symbol = t2.symbol
                               AND t1.trade_id != t2.trade_id
-                              AND ABS(EPOCH(t1.timestamp - t2.timestamp))/3600 <= 24
+                              AND ABS(EPOCH(t1.timestamp - t2.timestamp))/3600 <= {max_hours}
                 GROUP BY t1.client_id, t1.symbol
             )
             SELECT client_id, symbol, trade_pairs, offsetting_trades, avg_price_diff
             FROM self_trade_analysis 
-            WHERE offsetting_trades >= 2 AND trade_pairs >= 4
+            WHERE offsetting_trades >= {min_offset} AND trade_pairs >= {min_pairs}
             """
             
             results = self.conn.execute(query).fetchall()
@@ -46,7 +54,8 @@ class ComplianceDetector:
                     "risk_score": min(100, (offsetting / pairs) * 100)
                 }
                 
-                severity = "HIGH" if offsetting / pairs > 0.7 else "MEDIUM"
+                ratio = (offsetting / pairs) if pairs else 0
+                severity = "HIGH" if ratio >= high_ratio else "MEDIUM"
                 
                 alert_id = str(uuid.uuid4())
                 description = f"Client {client_id} executed {offsetting} offsetting trades in {symbol} within 24 hours"
@@ -73,7 +82,13 @@ class ComplianceDetector:
     def detect_wash_trades(self):
         """Detect wash trading patterns"""
         try:
-            query = """
+            cfg = self.rules.get('wash_trade_detection', {})
+            lookback_days = int(cfg.get('lookback_days', 7))
+            min_trades = int(cfg.get('min_trades', 6))
+            net_pos_ratio = float(cfg.get('net_position_threshold_ratio', 0.1))
+            high_trades_threshold = int(cfg.get('high_severity_trade_count', 10))
+
+            query = f"""
             WITH position_analysis AS (
                 SELECT 
                     client_id,
@@ -84,13 +99,13 @@ class ComplianceDetector:
                     MIN(timestamp) as first_trade,
                     MAX(timestamp) as last_trade
                 FROM trades 
-                WHERE timestamp >= CURRENT_TIMESTAMP - INTERVAL 7 DAY
+                WHERE timestamp >= CURRENT_TIMESTAMP - INTERVAL {lookback_days} DAY
                 GROUP BY client_id, symbol
             )
             SELECT client_id, symbol, net_position, trade_count, avg_quantity
             FROM position_analysis 
-            WHERE ABS(net_position) <= (avg_quantity * 0.1)
-            AND trade_count >= 6
+            WHERE ABS(net_position) <= (avg_quantity * {net_pos_ratio})
+            AND trade_count >= {min_trades}
             """
             
             results = self.conn.execute(query).fetchall()
@@ -108,7 +123,7 @@ class ComplianceDetector:
                     "risk_score": min(100, trade_count * 10)
                 }
                 
-                severity = "HIGH" if trade_count > 10 else "MEDIUM"
+                severity = "HIGH" if trade_count > high_trades_threshold else "MEDIUM"
                 
                 alert_id = str(uuid.uuid4())
                 description = f"Client {client_id} executed {trade_count} trades in {symbol} with near-zero net position"
@@ -134,7 +149,12 @@ class ComplianceDetector:
     def detect_high_frequency_patterns(self):
         """Detect suspicious high-frequency trading patterns"""
         try:
-            query = """
+            cfg = self.rules.get('high_frequency_pattern', {})
+            lookback_hours = int(cfg.get('lookback_hours', 24))
+            min_max_trades = int(cfg.get('min_max_trades_per_hour', 10))
+            high_freq_threshold = int(cfg.get('high_severity_threshold', 50))
+
+            query = f"""
             WITH hourly_trading AS (
                 SELECT 
                     client_id,
@@ -142,13 +162,13 @@ class ComplianceDetector:
                     DATE_TRUNC('hour', timestamp) as trading_hour,
                     COUNT(*) as trades_per_hour
                 FROM trades
-                WHERE timestamp >= CURRENT_TIMESTAMP - INTERVAL 1 DAY
+                WHERE timestamp >= CURRENT_TIMESTAMP - INTERVAL {lookback_hours} HOUR
                 GROUP BY client_id, symbol, DATE_TRUNC('hour', timestamp)
             )
             SELECT client_id, symbol, MAX(trades_per_hour) as max_hourly_trades
             FROM hourly_trading
             GROUP BY client_id, symbol
-            HAVING MAX(trades_per_hour) > 10
+            HAVING MAX(trades_per_hour) > {min_max_trades}
             """
             
             results = self.conn.execute(query).fetchall()
@@ -164,7 +184,7 @@ class ComplianceDetector:
                     "risk_score": min(100, max_trades)
                 }
                 
-                severity = "HIGH" if max_trades > 50 else "MEDIUM"
+                severity = "HIGH" if max_trades > high_freq_threshold else "MEDIUM"
                 
                 alert_id = str(uuid.uuid4())
                 description = f"Client {client_id} executed {max_trades} trades per hour in {symbol}"

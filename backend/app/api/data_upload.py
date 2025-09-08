@@ -1,16 +1,22 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Form
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Depends, Request
 import pandas as pd
 import io
-from app.core.database import get_db_connection
+import asyncio
+from app.core.database import get_db
 from app.services.detection_rules import ComplianceDetector
+from app.core.security import admin_required, rate_limit
 
 router = APIRouter()
 
 @router.post("/upload/csv")
 async def upload_csv_data(
     file: UploadFile = File(...),
-    table_type: str = Form(...)
+    table_type: str = Form(...),
+    conn = Depends(get_db),
+    _: dict = Depends(admin_required),
+    request: Request = None,
 ):
+    rate_limit(request, 30)
     try:
         # Basic validation
         if not file or not file.filename.lower().endswith('.csv'):
@@ -21,11 +27,12 @@ async def upload_csv_data(
         if not contents:
             raise HTTPException(status_code=400, detail="Uploaded file is empty")
 
-        df = pd.read_csv(io.StringIO(contents.decode('utf-8')))
+        # Offload blocking CSV read to a thread
+        df = await asyncio.to_thread(pd.read_csv, io.StringIO(contents.decode('utf-8')))
 
         # Normalize column names (strip spaces)
         df.columns = [c.strip() for c in df.columns]
-        
+
         # Validate table type
         if table_type not in ['orders', 'trades', 'clients']:
             raise HTTPException(status_code=400, detail="Invalid table type")
@@ -63,11 +70,14 @@ async def upload_csv_data(
         # Reorder columns to match the table schema
         df = df[target_cols]
 
-        # Connect to database and insert data with explicit casts
-        conn = get_db_connection()
+        # Insert data with explicit casts using shared connection
         try:
-            # Clear existing data for demo purposes
-            conn.execute(f"DELETE FROM {table_type}")
+            # Strict allowlist mapping to real table names
+            table_map = {"orders": "orders", "trades": "trades", "clients": "clients"}
+            target_table = table_map[table_type]
+
+            # Clear existing data for demo/demo reset behavior
+            conn.execute(f"DELETE FROM {target_table}")
 
             conn.register("df_temp", df)
 
@@ -86,20 +96,19 @@ async def upload_csv_data(
                     select_exprs.append(col)
 
             select_sql = ", ".join(select_exprs)
-            insert_sql = f"INSERT INTO {table_type} ({', '.join(target_cols)}) SELECT {select_sql} FROM df_temp"
+            insert_sql = f"INSERT INTO {target_table} ({', '.join(target_cols)}) SELECT {select_sql} FROM df_temp"
             conn.execute(insert_sql)
         finally:
             try:
                 conn.unregister("df_temp")
             except Exception:
                 pass
-            conn.close()
 
         # If trades were uploaded, run detection algorithms
         new_alerts = []
         if table_type == "trades":
             try:
-                detector = ComplianceDetector()
+                detector = ComplianceDetector(conn)
                 new_alerts = detector.run_all_detectors()
                 print(f"Generated {len(new_alerts)} alerts for uploaded trades")
             except Exception as detection_error:
@@ -119,10 +128,8 @@ async def upload_csv_data(
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @router.get("/tables/info")
-async def get_table_info():
+async def get_table_info(conn = Depends(get_db)):
     """Get information about all tables"""
-    conn = get_db_connection()
-    
     tables_info = {}
     tables = ['orders', 'trades', 'clients', 'alerts']
     
@@ -134,14 +141,14 @@ async def get_table_info():
         except:
             tables_info[table] = {"record_count": 0}
     
-    conn.close()
     return tables_info
 
 @router.post("/run-detection")
-async def run_detection_manually():
+async def run_detection_manually(conn = Depends(get_db), _: dict = Depends(admin_required), request: Request = None):
+    rate_limit(request, 10)
     """Manually trigger compliance detection"""
     try:
-        detector = ComplianceDetector()
+        detector = ComplianceDetector(conn)
         alerts = detector.run_all_detectors()
         
         return {
@@ -151,3 +158,35 @@ async def run_detection_manually():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Detection failed: {str(e)}")
+
+@router.delete("/clear")
+async def clear_table(table_type: str, conn = Depends(get_db), _: dict = Depends(admin_required), request: Request = None):
+    rate_limit(request, 10)
+    """Delete all rows from a specific table: orders, trades, clients, or alerts."""
+    try:
+        table_map = {"orders": "orders", "trades": "trades", "clients": "clients", "alerts": "alerts"}
+        if table_type not in table_map:
+            raise HTTPException(status_code=400, detail="Invalid table type")
+        target_table = table_map[table_type]
+        before = conn.execute(f"SELECT COUNT(*) FROM {target_table}").fetchone()[0]
+        conn.execute(f"DELETE FROM {target_table}")
+        return {"message": f"Cleared {before} rows from {target_table}", "rows_deleted": before}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Clear failed: {str(e)}")
+
+@router.delete("/clear-all")
+async def clear_all(conn = Depends(get_db), _: dict = Depends(admin_required), request: Request = None):
+    rate_limit(request, 5)
+    """Delete all operational data in a safe order."""
+    try:
+        # Delete alerts, trades, orders, clients in order
+        deleted = {}
+        for table in ["alerts", "trades", "orders", "clients"]:
+            count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+            conn.execute(f"DELETE FROM {table}")
+            deleted[table] = count
+        return {"message": "All tables cleared", "details": deleted}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Clear-all failed: {str(e)}")

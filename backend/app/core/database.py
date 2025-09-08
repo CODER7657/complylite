@@ -1,14 +1,25 @@
 import duckdb
-import os
+from fastapi import Request
 from app.core.config import settings
 
 def get_db_connection():
-    """Get database connection"""
+    """Create a new database connection (fallback). Prefer using the FastAPI dependency get_db for requests."""
     return duckdb.connect(settings.database_url)
 
-def init_database():
-    """Initialize database with required tables"""
-    conn = get_db_connection()
+def get_db(request: Request):
+    """FastAPI dependency: return the application-scoped DuckDB connection."""
+    return request.app.state.db
+
+def init_database(conn: duckdb.DuckDBPyConnection | None = None):
+    """Initialize database with required tables.
+
+    If a connection is provided, it will be used and not closed here.
+    Otherwise, a temporary connection will be created and closed.
+    """
+    own_conn = False
+    if conn is None:
+        conn = get_db_connection()
+        own_conn = True
     
     # Create orders table
     conn.execute("""
@@ -65,6 +76,13 @@ def init_database():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+
+    # Helpful indexes for faster filtering
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_created_at ON alerts(created_at)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_severity ON alerts(severity)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_status ON alerts(status)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_client ON alerts(client_id)")
     
-    conn.close()
+    if own_conn:
+        conn.close()
     print("Database initialized successfully")

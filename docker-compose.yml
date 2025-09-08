@@ -1,22 +1,29 @@
 version: '3.8'
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+    environment:
+      - PYTHONPATH=/app
+      - COMPLYLITE_DATABASE_URL=/data/compliance.db
+      - COMPLYLITE_ALLOWED_ORIGINS=http://localhost:3000
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data
-      - ./backend:/app
-    environment:
-      - PYTHONPATH=/app
-      
+      - ./data:/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
   frontend:
-    build: ./frontend  
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: http://localhost:8000
     ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend/src:/app/src
+      - "3000:80"
     depends_on:
-      - backend
-    environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      backend:
+        condition: service_healthy

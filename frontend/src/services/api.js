@@ -9,6 +9,33 @@ const api = axios.create({
   },
 });
 
+// Attach token if present
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('auth_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+api.interceptors.response.use(
+  (r) => r,
+  (error) => {
+    const status = error?.response?.status;
+    if (status === 401) {
+      localStorage.removeItem('auth_token');
+      if (window.location.pathname !== '/login') {
+        window.location.replace('/login');
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const authAPI = {
+  login: (username, password) => api.post('/api/v1/auth/login', { username, password }),
+};
+
 export const dataAPI = {
   uploadCSV: (file, tableType) => {
     const formData = new FormData();
@@ -22,6 +49,10 @@ export const dataAPI = {
   getTableInfo: () => api.get('/api/v1/data/tables/info'),
   
   runDetection: () => api.post('/api/v1/data/run-detection'),
+
+  clearTable: (tableType) => api.delete('/api/v1/data/clear', { params: { table_type: tableType } }),
+
+  clearAll: () => api.delete('/api/v1/data/clear-all'),
 };
 
 export const alertsAPI = {

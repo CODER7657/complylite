@@ -1,13 +1,17 @@
-rules:
-  - id: self_trade_same_day
-    name: Self trade same day (sample)
-    severity: high
-    description: Flags clients buying and selling the same symbol on the same day.
-  - id: cancel_burst
-    name: High cancel ratio (sample)
-    severity: medium
-    description: Flags clients with >80% order cancels in short windows.
-  - id: suitability_breach
-    name: Suitability breach vs risk profile (sample)
-    severity: high
-    description: Flags low-risk clients trading high-risk products.
+# Tunable thresholds for detection rules (defaults)
+self_trade_detection:
+  min_offsetting_trades: 2
+  min_trade_pairs: 4
+  max_hours_window: 24
+  high_severity_ratio: 0.7
+
+wash_trade_detection:
+  lookback_days: 7
+  min_trades: 6
+  net_position_threshold_ratio: 0.1
+  high_severity_trade_count: 10
+
+high_frequency_pattern:
+  lookback_hours: 24
+  min_max_trades_per_hour: 10
+  high_severity_threshold: 50

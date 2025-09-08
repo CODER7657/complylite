@@ -1,3 +1,58 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors/IDE
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Node/JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.eslintcache
+.parcel-cache
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/build/
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Local databases & data
+*.db
+backend/compliance.db
+compliance.db
+*.db.wal
+*.db-shm
+data/
+backend/data/
+
+# Environment files
+.env
+backend/.env
+
+# Docker artifacts
+**/.docker/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

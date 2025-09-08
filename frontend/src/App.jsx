@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Typography, Space } from 'antd';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Layout, Menu, Typography, Space, Button } from 'antd';
 import { 
   DashboardOutlined, 
   AlertOutlined, 
@@ -11,6 +11,7 @@ import Dashboard from './components/Dashboard';
 import AlertsPage from './components/AlertsPage';
 import DataUploadPage from './components/DataUploadPage';
 import RuleSettingsPage from './components/RuleSettingsPage';
+import Login from './components/Login';
 import './App.css';
 
 const { Header, Sider, Content } = Layout;
@@ -98,20 +99,20 @@ const AppContent = () => {
         />
       </Sider>
       <Layout>
-  <Header style={{ background: '#fff', padding: '0 24px', borderBottom: '1px solid #f0f0f0' }}>
-          <Space>
-            <Title level={4} style={{ margin: 0 }}>
-              {getCurrentPageTitle()}
-            </Title>
-          </Space>
+        <Header style={{ background: '#fff', padding: '0 24px', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Title level={4} style={{ margin: 0 }}>
+            {getCurrentPageTitle()}
+          </Title>
+          <Button onClick={() => { localStorage.removeItem('auth_token'); window.location.replace('/login'); }}>Logout</Button>
         </Header>
   <Content style={{ margin: 0, background: '#f5f7fa' }}>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/upload" element={<DataUploadPage />} />
             <Route path="/settings" element={<RuleSettingsPage />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </Content>
       </Layout>
@@ -122,7 +123,14 @@ const AppContent = () => {
 function App() {
   return (
     <Router>
-      <AppContent />
+      {localStorage.getItem('auth_token') ? (
+        <AppContent />
+      ) : (
+        <Routes>
+          <Route path="/login" element={<Login onSuccess={() => window.location.replace('/dashboard')} />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      )}
     </Router>
   );
 }

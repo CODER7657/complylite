@@ -16,8 +16,6 @@ import {
   WarningOutlined,
   TrophyOutlined 
 } from '@ant-design/icons';
-import AlertsTable from './AlertsTable';
-import UploadData from './UploadData';
 import { dashboardAPI } from '../services/api';
 
 const { Title, Text } = Typography;
@@ -164,46 +162,28 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      {/* Recent Activity */}
+      {/* Activity Overview (symbols only). Alerts and Upload live on dedicated pages. */}
       <Row gutter={[16,16]} style={{ marginBottom: 24 }}>
-        <Col span={16}>
-          <Card title="Recent Alerts" className="card-section">
-            {(recentActivity.recent_alerts || []).length === 0 ? (
-              <Alert type="info" message="No recent alerts" showIcon />
+        <Col span={24}>
+          <Card title="Active Trading Symbols" className="card-section">
+            {(recentActivity.active_symbols || []).length === 0 ? (
+              <Alert type="info" message="No recent trading activity" showIcon />
             ) : (
-              <div className="table-sticky table-zebra">
-                <AlertsTable 
-                  alerts={recentActivity.recent_alerts || []} 
-                  showPagination={false}
-                  size="small"
-                />
-              </div>
+              (recentActivity.active_symbols || []).map((symbol, index) => (
+                <div key={index} style={{ marginBottom: 12 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Text strong>{symbol.symbol}</Text>
+                    <Text>{symbol.trade_count} trades</Text>
+                  </div>
+                  <Text type="secondary" style={{ fontSize: 12 }}>
+                    Last: {new Date(symbol.last_trade).toLocaleTimeString()}
+                  </Text>
+                </div>
+              ))
             )}
           </Card>
         </Col>
-        <Col span={8}>
-          <Card title="Active Trading Symbols" className="card-section">
-            {(recentActivity.active_symbols || []).map((symbol, index) => (
-              <div key={index} style={{ marginBottom: 12 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Text strong>{symbol.symbol}</Text>
-                  <Text>{symbol.trade_count} trades</Text>
-                </div>
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                  Last: {new Date(symbol.last_trade).toLocaleTimeString()}
-                </Text>
-              </div>
-            ))}
-          </Card>
-        </Col>
       </Row>
-
-      <Divider />
-
-      {/* Data Upload Section */}
-  <Card title="Data Upload & Management" className="card-section">
-        <UploadData onUploadSuccess={fetchAllData} />
-      </Card>
     </div>
   );
 };
