@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Space, message, Spin, Empty } from 'antd';
-import { ReloadOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { Card, Button, Space, message, Spin, Empty, Input } from 'antd';
+import { ReloadOutlined, PlayCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import AlertsTable from './AlertsTable';
 import { alertsAPI, dataAPI } from '../services/api';
 
@@ -8,15 +8,20 @@ const AlertsPage = () => {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [runningDetection, setRunningDetection] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     fetchAlerts();
   }, []);
 
-  const fetchAlerts = async () => {
+  const fetchAlerts = async (search = null) => {
     try {
       setLoading(true);
-      const response = await alertsAPI.getAlerts({ limit: 100 });
+      const params = { limit: 100 };
+      if (search) {
+        params.search = search;
+      }
+      const response = await alertsAPI.getAlerts(params);
       setAlerts(response.data);
     } catch (error) {
       message.error('Failed to fetch alerts: ' + (error.response?.data?.detail || error.message));
@@ -32,12 +37,21 @@ const AlertsPage = () => {
       message.success(
         `Detection completed! Generated ${response.data.alerts_generated} new alerts`
       );
-      await fetchAlerts(); // Refresh alerts after detection
+      await handleRefresh(); // Refresh alerts after detection
     } catch (error) {
       message.error('Detection failed: ' + (error.response?.data?.detail || error.message));
     } finally {
       setRunningDetection(false);
     }
+  };
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+    fetchAlerts(value || null);
+  };
+
+  const handleRefresh = () => {
+    fetchAlerts(searchText || null);
   };
 
   if (loading) {
@@ -65,20 +79,35 @@ const AlertsPage = () => {
             </Button>
             <Button
               icon={<ReloadOutlined />}
-              onClick={fetchAlerts}
+              onClick={handleRefresh}
             >
               Refresh
             </Button>
           </Space>
         }
       >
+        <div style={{ marginBottom: 16 }}>
+          <Input.Search
+            placeholder="Search alerts by description, client ID, symbol, or rule name..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            onSearch={handleSearch}
+            onChange={(e) => {
+              if (e.target.value === '') {
+                handleSearch('');
+              }
+            }}
+            style={{ width: '100%' }}
+          />
+        </div>
         {alerts.length === 0 ? (
           <Empty description="No alerts found. Try uploading data or running detection." />
         ) : (
           <div className="table-sticky table-zebra">
             <AlertsTable 
               alerts={alerts}
-              onRefresh={fetchAlerts}
+              onRefresh={handleRefresh}
             />
           </div>
         )}
