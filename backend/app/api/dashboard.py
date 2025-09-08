@@ -51,11 +51,11 @@ async def get_recent_activity(conn = Depends(get_db)):
             LIMIT 10
         """).fetchall()
         
-        # Recent trades by symbol (DuckDB-compatible time arithmetic)
+    # Recent trades by symbol
         symbol_activity = conn.execute("""
             SELECT symbol, COUNT(*) as trade_count, MAX(timestamp) as last_trade
             FROM trades 
-            WHERE timestamp >= CURRENT_TIMESTAMP - INTERVAL 1 DAY
+            WHERE timestamp >= NOW() - INTERVAL 1 DAY
             GROUP BY symbol
             ORDER BY trade_count DESC
             LIMIT 5

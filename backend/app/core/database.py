@@ -76,12 +76,6 @@ def init_database(conn: duckdb.DuckDBPyConnection | None = None):
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
-
-    # Helpful indexes for faster filtering
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_created_at ON alerts(created_at)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_severity ON alerts(severity)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_status ON alerts(status)")
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_alerts_client ON alerts(client_id)")
     
     if own_conn:
         conn.close()

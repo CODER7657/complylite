@@ -10,14 +10,12 @@ import {
   Statistic,
   Space,
   Progress,
-  Alert,
-  Popconfirm
+  Alert
 } from 'antd';
 import { 
   UploadOutlined, 
   PlayCircleOutlined, 
-  InfoCircleOutlined,
-  DeleteOutlined
+  InfoCircleOutlined 
 } from '@ant-design/icons';
 import { dataAPI } from '../services/api';
 
@@ -29,7 +27,6 @@ const UploadData = ({ onUploadSuccess }) => {
   const [tableType, setTableType] = useState('trades');
   const [runningDetection, setRunningDetection] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [clearing, setClearing] = useState(false);
 
   const handleUpload = async (file) => {
     if (!file.name.endsWith('.csv')) {
@@ -105,32 +102,6 @@ const UploadData = ({ onUploadSuccess }) => {
     }
   };
 
-  const handleClearTable = async () => {
-    setClearing(true);
-    try {
-      const resp = await dataAPI.clearTable(tableType);
-      message.success(resp.data.message || `Cleared ${tableType}`);
-      if (onUploadSuccess) onUploadSuccess();
-    } catch (e) {
-      message.error('Clear failed: ' + (e.response?.data?.detail || e.message));
-    } finally {
-      setClearing(false);
-    }
-  };
-
-  const handleClearAll = async () => {
-    setClearing(true);
-    try {
-      const resp = await dataAPI.clearAll();
-      message.success(resp.data.message || 'All tables cleared');
-      if (onUploadSuccess) onUploadSuccess();
-    } catch (e) {
-      message.error('Clear-all failed: ' + (e.response?.data?.detail || e.message));
-    } finally {
-      setClearing(false);
-    }
-  };
-
   return (
     <div>
       <Row gutter={16}>
@@ -187,7 +158,7 @@ const UploadData = ({ onUploadSuccess }) => {
         </Col>
 
         <Col span={8}>
-          <Card title="Controls" className="card-section">
+          <Card title="Detection Controls" className="card-section">
             <Space direction="vertical" style={{ width: '100%' }}>
               <Button
                 type="primary"
@@ -205,32 +176,6 @@ const UploadData = ({ onUploadSuccess }) => {
                 type="warning"
                 showIcon
               />
-
-              <Space direction="vertical" style={{ width: '100%' }}>
-                <Popconfirm
-                  title={`Clear ${tableType} data?`}
-                  description={`This will delete all rows in ${tableType}.`}
-                  okText="Delete"
-                  okButtonProps={{ danger: true }}
-                  onConfirm={handleClearTable}
-                >
-                  <Button danger icon={<DeleteOutlined />} loading={clearing} block>
-                    Clear Current Table
-                  </Button>
-                </Popconfirm>
-
-                <Popconfirm
-                  title="Clear ALL data?"
-                  description="This will delete all rows in alerts, trades, orders, and clients."
-                  okText="Delete All"
-                  okButtonProps={{ danger: true }}
-                  onConfirm={handleClearAll}
-                >
-                  <Button danger icon={<DeleteOutlined />} loading={clearing} block>
-                    Clear All Tables
-                  </Button>
-                </Popconfirm>
-              </Space>
 
               <div>
                 <Statistic

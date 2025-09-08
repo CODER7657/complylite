@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Button, Space, message, Spin, Empty, Tooltip } from 'antd';
+import { Card, Button, Space, message, Spin, Empty } from 'antd';
 import { ReloadOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import AlertsTable from './AlertsTable';
 import { alertsAPI, dataAPI } from '../services/api';

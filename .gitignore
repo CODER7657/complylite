@@ -42,10 +42,6 @@ frontend/.env.production.local
 *.db
 backend/compliance.db
 compliance.db
-*.db.wal
-*.db-shm
-data/
-backend/data/
 
 # Environment files
 .env

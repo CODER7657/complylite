@@ -96,18 +96,12 @@ async def update_alert_status(alert_id: str, status: str, conn = Depends(get_db)
         if status.upper() not in ["OPEN", "IN_REVIEW", "CLOSED", "FALSE_POSITIVE"]:
             raise HTTPException(status_code=400, detail="Invalid status")
 
-        # Verify alert exists before updating (DuckDB doesn't provide reliable rowcount)
-        exists = conn.execute(
-            "SELECT COUNT(*) FROM alerts WHERE alert_id = ?",
-            [alert_id],
-        ).fetchone()[0]
-        if exists == 0:
-            raise HTTPException(status_code=404, detail="Alert not found")
-
-        conn.execute(
+        result = conn.execute(
             "UPDATE alerts SET status = ? WHERE alert_id = ?",
             [status.upper(), alert_id],
         )
+        if result.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Alert not found")
         return {"message": f"Alert {alert_id} status updated to {status}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -116,14 +110,9 @@ async def update_alert_status(alert_id: str, status: str, conn = Depends(get_db)
 async def delete_alert(alert_id: str, conn = Depends(get_db)):
     """Delete a specific alert"""
     try:
-        # Verify alert exists, then delete
-        exists = conn.execute(
-            "SELECT COUNT(*) FROM alerts WHERE alert_id = ?",
-            [alert_id],
-        ).fetchone()[0]
-        if exists == 0:
+        result = conn.execute("DELETE FROM alerts WHERE alert_id = ?", [alert_id])
+        if result.rowcount == 0:
             raise HTTPException(status_code=404, detail="Alert not found")
-        conn.execute("DELETE FROM alerts WHERE alert_id = ?", [alert_id])
         return {"message": f"Alert {alert_id} deleted"}
     except HTTPException:
         raise

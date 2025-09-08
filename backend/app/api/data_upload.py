@@ -1,10 +1,9 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Depends, Request
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Depends
 import pandas as pd
 import io
 import asyncio
 from app.core.database import get_db
 from app.services.detection_rules import ComplianceDetector
-from app.core.security import admin_required, rate_limit
 
 router = APIRouter()
 
@@ -13,10 +12,7 @@ async def upload_csv_data(
     file: UploadFile = File(...),
     table_type: str = Form(...),
     conn = Depends(get_db),
-    _: dict = Depends(admin_required),
-    request: Request = None,
 ):
-    rate_limit(request, 30)
     try:
         # Basic validation
         if not file or not file.filename.lower().endswith('.csv'):
@@ -144,11 +140,10 @@ async def get_table_info(conn = Depends(get_db)):
     return tables_info
 
 @router.post("/run-detection")
-async def run_detection_manually(conn = Depends(get_db), _: dict = Depends(admin_required), request: Request = None):
-    rate_limit(request, 10)
+async def run_detection_manually():
     """Manually trigger compliance detection"""
     try:
-        detector = ComplianceDetector(conn)
+        detector = ComplianceDetector()
         alerts = detector.run_all_detectors()
         
         return {
@@ -158,35 +153,3 @@ async def run_detection_manually(conn = Depends(get_db), _: dict = Depends(admin
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Detection failed: {str(e)}")
-
-@router.delete("/clear")
-async def clear_table(table_type: str, conn = Depends(get_db), _: dict = Depends(admin_required), request: Request = None):
-    rate_limit(request, 10)
-    """Delete all rows from a specific table: orders, trades, clients, or alerts."""
-    try:
-        table_map = {"orders": "orders", "trades": "trades", "clients": "clients", "alerts": "alerts"}
-        if table_type not in table_map:
-            raise HTTPException(status_code=400, detail="Invalid table type")
-        target_table = table_map[table_type]
-        before = conn.execute(f"SELECT COUNT(*) FROM {target_table}").fetchone()[0]
-        conn.execute(f"DELETE FROM {target_table}")
-        return {"message": f"Cleared {before} rows from {target_table}", "rows_deleted": before}
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Clear failed: {str(e)}")
-
-@router.delete("/clear-all")
-async def clear_all(conn = Depends(get_db), _: dict = Depends(admin_required), request: Request = None):
-    rate_limit(request, 5)
-    """Delete all operational data in a safe order."""
-    try:
-        # Delete alerts, trades, orders, clients in order
-        deleted = {}
-        for table in ["alerts", "trades", "orders", "clients"]:
-            count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-            conn.execute(f"DELETE FROM {table}")
-            deleted[table] = count
-        return {"message": "All tables cleared", "details": deleted}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Clear-all failed: {str(e)}")

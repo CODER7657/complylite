@@ -54,8 +54,7 @@ class ComplianceDetector:
                     "risk_score": min(100, (offsetting / pairs) * 100)
                 }
                 
-                ratio = (offsetting / pairs) if pairs else 0
-                severity = "HIGH" if ratio >= high_ratio else "MEDIUM"
+                severity = "HIGH" if offsetting / pairs > high_ratio else "MEDIUM"
                 
                 alert_id = str(uuid.uuid4())
                 description = f"Client {client_id} executed {offsetting} offsetting trades in {symbol} within 24 hours"
