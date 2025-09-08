@@ -13,9 +13,10 @@ async def get_alerts(
     status: Optional[str] = None,
     client_id: Optional[str] = None,
     rule_name: Optional[str] = None,
+    search: Optional[str] = None,
     conn = Depends(get_db),
 ):
-    """Get alerts with optional filtering"""
+    """Get alerts with optional filtering and search"""
     try:
         query = "SELECT * FROM alerts WHERE 1=1"
         params: list = []
@@ -35,6 +36,12 @@ async def get_alerts(
         if rule_name:
             query += " AND rule_name = ?"
             params.append(rule_name)
+
+        if search:
+            # Add text search across multiple fields using ILIKE for case-insensitive matching
+            search_term = f"%{search}%"
+            query += " AND (description ILIKE ? OR client_id ILIKE ? OR symbol ILIKE ? OR rule_name ILIKE ?)"
+            params.extend([search_term, search_term, search_term, search_term])
 
         query += " ORDER BY created_at DESC LIMIT ? OFFSET ?"
         params.extend([limit, offset])
