@@ -19,7 +19,11 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup_event():
-    init_database()
+    try:
+        init_database()
+        print("✅ Database initialized successfully")
+    except Exception as e:
+        print(f"❌ Database initialization failed: {e}")
 
 app.include_router(data_upload.router, prefix="/api/v1/data", tags=["data"])
 app.include_router(alerts.router, prefix="/api/v1/alerts", tags=["alerts"])

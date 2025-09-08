@@ -1,0 +1,96 @@
+.App {
+  text-align: center;
+}
+
+.dashboard-card {
+  margin-bottom: 16px;
+}
+
+.alert-high {
+  border-left: 4px solid #ff4d4f;
+}
+
+.alert-medium {
+  border-left: 4px solid #faad14;
+}
+
+.alert-low {
+  border-left: 4px solid #52c41a;
+}
+
+.upload-area {
+  border: 2px dashed #d9d9d9;
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+  background: #fafafa;
+}
+
+.stats-card {
+  text-align: center;
+}
+
+.compliance-score {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.score-excellent { color: #52c41a; }
+.score-good { color: #1890ff; }
+.score-warning { color: #faad14; }
+.score-danger { color: #ff4d4f; }
+
+/* New: Layout spacing and cards */
+.page-wrap {
+  padding: 24px;
+}
+
+.card-section {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 16px;
+}
+
+.section-title {
+  margin: 0 0 12px 0 !important;
+}
+
+/* Sidebar active state */
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: rgba(24, 144, 255, 0.25) !important;
+  border-left: 3px solid #1890ff;
+}
+
+/* Table improvements */
+.table-zebra .ant-table-tbody > tr:nth-child(odd) > td {
+  background: #fcfcfc;
+}
+.table-sticky .ant-table-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* Dropzone styling */
+.dropzone {
+  border: 2px dashed #91d5ff;
+  background: #f0f9ff;
+  border-radius: 8px;
+}
+.dropzone:hover {
+  border-color: #1890ff;
+}
+
+/* Rule section heading */
+.rule-heading {
+  border-left: 4px solid #1890ff;
+  padding-left: 8px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .page-wrap {
+    padding: 12px;
+  }
+}

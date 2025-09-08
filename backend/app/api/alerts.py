@@ -8,8 +8,11 @@ router = APIRouter()
 @router.get("/", response_model=List[AlertResponse])
 async def get_alerts(
     limit: int = 50,
+    offset: int = 0,
     severity: Optional[str] = None,
-    status: Optional[str] = None
+    status: Optional[str] = None,
+    client_id: Optional[str] = None,
+    rule_name: Optional[str] = None,
 ):
     """Get alerts with optional filtering"""
     try:
@@ -25,9 +28,17 @@ async def get_alerts(
         if status:
             query += " AND status = ?"
             params.append(status.upper())
+
+        if client_id:
+            query += " AND client_id = ?"
+            params.append(client_id)
+
+        if rule_name:
+            query += " AND rule_name = ?"
+            params.append(rule_name)
         
-        query += " ORDER BY created_at DESC LIMIT ?"
-        params.append(limit)
+        query += " ORDER BY created_at DESC LIMIT ? OFFSET ?"
+        params.extend([limit, offset])
         
         results = conn.execute(query, params).fetchall()
         conn.close()
@@ -76,7 +87,7 @@ async def get_alert_stats():
         # Today's alerts
         today_alerts = conn.execute("""
             SELECT COUNT(*) FROM alerts 
-            WHERE DATE(created_at) = CURRENT_DATE
+            WHERE created_at >= CURRENT_DATE
         """).fetchone()[0]
         stats["alerts_today"] = today_alerts
         
@@ -118,5 +129,20 @@ async def update_alert_status(alert_id: str, status: str):
         
         return {"message": f"Alert {alert_id} status updated to {status}"}
         
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/{alert_id}")
+async def delete_alert(alert_id: str):
+    """Delete a specific alert"""
+    try:
+        conn = get_db_connection()
+        result = conn.execute("DELETE FROM alerts WHERE alert_id = ?", [alert_id])
+        if result.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Alert not found")
+        conn.close()
+        return {"message": f"Alert {alert_id} deleted"}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

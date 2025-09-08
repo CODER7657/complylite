@@ -17,13 +17,16 @@ async def get_dashboard_stats():
                 COUNT(CASE WHEN severity = 'HIGH' THEN 1 END) as high,
                 COUNT(CASE WHEN severity = 'MEDIUM' THEN 1 END) as medium,
                 COUNT(CASE WHEN severity = 'LOW' THEN 1 END) as low,
-                COUNT(CASE WHEN DATE(created_at) = CURRENT_DATE THEN 1 END) as today
+                COUNT(CASE WHEN created_at >= CURRENT_DATE THEN 1 END) as today
             FROM alerts
         """).fetchone()
         
         # Get trade and client counts
         trade_count = conn.execute("SELECT COUNT(*) FROM trades").fetchone()[0]
         client_count = conn.execute("SELECT COUNT(*) FROM clients").fetchone()[0]
+        # If no client master data, approximate active clients by distinct IDs in trades
+        if client_count == 0:
+            client_count = conn.execute("SELECT COUNT(DISTINCT client_id) FROM trades").fetchone()[0]
         
         conn.close()
         
@@ -58,7 +61,7 @@ async def get_recent_activity():
         symbol_activity = conn.execute("""
             SELECT symbol, COUNT(*) as trade_count, MAX(timestamp) as last_trade
             FROM trades 
-            WHERE timestamp >= CURRENT_TIMESTAMP - INTERVAL '24 hours'
+            WHERE timestamp >= NOW() - INTERVAL 1 DAY
             GROUP BY symbol
             ORDER BY trade_count DESC
             LIMIT 5
@@ -96,30 +99,28 @@ async def get_compliance_score():
     try:
         conn = get_db_connection()
         
-        # Calculate compliance metrics
+        # Calculate compliance metrics (demo-friendly)
         total_trades = conn.execute("SELECT COUNT(*) FROM trades").fetchone()[0]
-        total_alerts = conn.execute("SELECT COUNT(*) FROM alerts WHERE status = 'OPEN'").fetchone()[0]
-        high_risk_alerts = conn.execute("SELECT COUNT(*) FROM alerts WHERE severity = 'HIGH' AND status = 'OPEN'").fetchone()[0]
-        
+        low_open = conn.execute("SELECT COUNT(*) FROM alerts WHERE severity = 'LOW' AND status = 'OPEN'").fetchone()[0]
+        med_open = conn.execute("SELECT COUNT(*) FROM alerts WHERE severity = 'MEDIUM' AND status = 'OPEN'").fetchone()[0]
+        high_open = conn.execute("SELECT COUNT(*) FROM alerts WHERE severity = 'HIGH' AND status = 'OPEN'").fetchone()[0]
+
         if total_trades == 0:
-            compliance_score = 100
+            compliance_score = 0.0
         else:
-            # Simple scoring algorithm
-            alert_ratio = total_alerts / total_trades
-            high_risk_ratio = high_risk_alerts / total_trades
-            
-            # Score out of 100 (lower alerts = higher score)
-            compliance_score = max(0, 100 - (alert_ratio * 1000) - (high_risk_ratio * 2000))
-            compliance_score = min(100, compliance_score)
+            # Per request: score = (low + medium) / total_trades * 100 (demo purpose)
+            compliance_score = ((low_open + med_open) / total_trades) * 100
+            # Clamp 0-100
+            compliance_score = max(0.0, min(100.0, compliance_score))
         
         conn.close()
         
         return {
             "compliance_score": round(compliance_score, 2),
             "total_trades": total_trades,
-            "open_alerts": total_alerts,
-            "high_risk_alerts": high_risk_alerts,
-            "risk_level": "LOW" if compliance_score > 80 else "MEDIUM" if compliance_score > 60 else "HIGH"
+            "open_alerts": low_open + med_open + high_open,
+            "high_risk_alerts": high_open,
+            "risk_level": "LOW" if compliance_score >= 80 else ("MEDIUM" if compliance_score >= 50 else "HIGH")
         }
         
     except Exception as e:
