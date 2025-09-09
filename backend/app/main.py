@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import data_upload, alerts, dashboard
+from app.api import data_upload, alerts, dashboard, auth
 from app.core.database import init_database, get_db_connection
 
 @asynccontextmanager
@@ -37,6 +37,7 @@ app.add_middleware(
 
 # Startup handled by lifespan
 
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(data_upload.router, prefix="/api/v1/data", tags=["data"])
 app.include_router(alerts.router, prefix="/api/v1/alerts", tags=["alerts"])
 app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["dashboard"])

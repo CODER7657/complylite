@@ -17,7 +17,6 @@ import {
   TrophyOutlined 
 } from '@ant-design/icons';
 import AlertsTable from './AlertsTable';
-import UploadData from './UploadData';
 import { dashboardAPI } from '../services/api';
 
 const { Title, Text } = Typography;
@@ -198,12 +197,6 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      <Divider />
-
-      {/* Data Upload Section */}
-  <Card title="Data Upload & Management" className="card-section">
-        <UploadData onUploadSuccess={fetchAllData} />
-      </Card>
     </div>
   );
 };
