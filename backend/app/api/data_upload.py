@@ -153,3 +153,29 @@ async def run_detection_manually():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Detection failed: {str(e)}")
+
+@router.delete("/clear")
+async def clear_table(table_type: str, conn = Depends(get_db)):
+    """Clear data from a specific table"""
+    try:
+        valid_tables = ['trades', 'orders', 'clients', 'alerts']
+        if table_type not in valid_tables:
+            raise HTTPException(status_code=400, detail=f"Invalid table type. Must be one of: {valid_tables}")
+        
+        conn.execute(f"DELETE FROM {table_type}")
+        
+        return {"message": f"Table '{table_type}' cleared successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear table: {str(e)}")
+
+@router.delete("/clear-all")
+async def clear_all_data(conn = Depends(get_db)):
+    """Clear all data from all tables"""
+    try:
+        tables = ['alerts', 'trades', 'orders', 'clients']
+        for table in tables:
+            conn.execute(f"DELETE FROM {table}")
+        
+        return {"message": "All data cleared successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear all data: {str(e)}")

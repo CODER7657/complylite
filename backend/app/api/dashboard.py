@@ -96,20 +96,48 @@ async def get_compliance_score(conn = Depends(get_db)):
         high_open = conn.execute("SELECT COUNT(*) FROM alerts WHERE severity = 'HIGH' AND status = 'OPEN'").fetchone()[0]
 
         if total_trades == 0:
-            compliance_score = 0.0
+            # No data uploaded yet - show neutral state
+            compliance_score = 100.0
+            risk_level = "LOW"
         else:
-            # Per request: score = (low + medium) / total_trades * 100 (demo purpose)
-            compliance_score = ((low_open + med_open) / total_trades) * 100
-            # Clamp 0-100
-            compliance_score = max(0.0, min(100.0, compliance_score))
+            # Calculate score based on alerts vs trades
+            total_open_alerts = low_open + med_open + high_open
+            if total_open_alerts == 0:
+                compliance_score = 100.0
+            else:
+                # Score decreases with more alerts relative to trades
+                compliance_score = max(0.0, 100.0 - (total_open_alerts / total_trades) * 100)
+            
+            # Determine risk level based on score and high-risk alerts
+            if high_open > 0 or compliance_score < 50:
+                risk_level = "HIGH"
+            elif compliance_score < 80:
+                risk_level = "MEDIUM"
+            else:
+                risk_level = "LOW"
         
         return {
             "compliance_score": round(compliance_score, 2),
             "total_trades": total_trades,
             "open_alerts": low_open + med_open + high_open,
             "high_risk_alerts": high_open,
-            "risk_level": "LOW" if compliance_score >= 80 else ("MEDIUM" if compliance_score >= 50 else "HIGH")
+            "risk_level": risk_level
         }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/reset-data")
+async def reset_all_data(conn = Depends(get_db)):
+    """Reset all data in the database (for demo purposes)"""
+    try:
+        # Clear all data from tables
+        conn.execute("DELETE FROM alerts")
+        conn.execute("DELETE FROM trades")
+        conn.execute("DELETE FROM orders")
+        conn.execute("DELETE FROM clients")
+        
+        return {"message": "All data has been reset successfully"}
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

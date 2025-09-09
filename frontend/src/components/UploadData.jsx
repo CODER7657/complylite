@@ -15,7 +15,8 @@ import {
 import { 
   UploadOutlined, 
   PlayCircleOutlined, 
-  InfoCircleOutlined 
+  InfoCircleOutlined,
+  DeleteOutlined 
 } from '@ant-design/icons';
 import { dataAPI } from '../services/api';
 
@@ -86,6 +87,30 @@ const UploadData = ({ onUploadSuccess }) => {
       message.error('Detection failed: ' + (error.response?.data?.detail || error.message));
     } finally {
       setRunningDetection(false);
+    }
+  };
+
+  const handleClearTable = async () => {
+    try {
+      await dataAPI.clearTable(tableType);
+      message.success(`${tableType} table cleared successfully`);
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
+    } catch (error) {
+      message.error('Clear failed: ' + (error.response?.data?.detail || error.message));
+    }
+  };
+
+  const handleClearAll = async () => {
+    try {
+      await dataAPI.clearAll();
+      message.success('All data cleared successfully');
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
+    } catch (error) {
+      message.error('Clear all failed: ' + (error.response?.data?.detail || error.message));
     }
   };
 
@@ -176,6 +201,26 @@ const UploadData = ({ onUploadSuccess }) => {
                 type="warning"
                 showIcon
               />
+
+              <Button
+                danger
+                icon={<DeleteOutlined />}
+                onClick={handleClearTable}
+                block
+                style={{ marginTop: '16px' }}
+              >
+                Clear {tableType} Table
+              </Button>
+
+              <Button
+                danger
+                type="primary"
+                icon={<DeleteOutlined />}
+                onClick={handleClearAll}
+                block
+              >
+                Clear All Data
+              </Button>
 
               <div>
                 <Statistic

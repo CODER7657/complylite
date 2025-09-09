@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Typography, Space } from 'antd';
+import { Layout, Menu, Typography, Space, Button } from 'antd';
 import { 
   DashboardOutlined, 
   AlertOutlined, 
   UploadOutlined,
-  SettingOutlined
+  SettingOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
 import Dashboard from './components/Dashboard';
 import AlertsPage from './components/AlertsPage';
 import DataUploadPage from './components/DataUploadPage';
 import RuleSettingsPage from './components/RuleSettingsPage';
+import Login from './components/Login';
 import './App.css';
 
 const { Header, Sider, Content } = Layout;
@@ -20,6 +22,27 @@ const { Title } = Typography;
 const AppContent = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token');
+    setIsAuthenticated(!!token);
+  }, []);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    navigate('/dashboard');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('auth_token');
+    setIsAuthenticated(false);
+    navigate('/login');
+  };
+
+  if (!isAuthenticated) {
+    return <Login onSuccess={handleLoginSuccess} />;
+  }
 
   const getCurrentPageTitle = () => {
     switch(location.pathname) {
@@ -98,12 +121,17 @@ const AppContent = () => {
         />
       </Sider>
       <Layout>
-  <Header style={{ background: '#fff', padding: '0 24px', borderBottom: '1px solid #f0f0f0' }}>
-          <Space>
-            <Title level={4} style={{ margin: 0 }}>
-              {getCurrentPageTitle()}
-            </Title>
-          </Space>
+  <Header style={{ background: '#fff', padding: '0 24px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Title level={4} style={{ margin: 0 }}>
+            {getCurrentPageTitle()}
+          </Title>
+          <Button 
+            type="text" 
+            icon={<LogoutOutlined />} 
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
         </Header>
   <Content style={{ margin: 0, background: '#f5f7fa' }}>
           <Routes>
