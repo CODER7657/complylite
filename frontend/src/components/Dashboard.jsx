@@ -7,8 +7,7 @@ import {
   Alert, 
   Spin, 
   Progress,
-  Typography,
-  Divider 
+  Typography
 } from 'antd';
 import { 
   AlertOutlined, 
