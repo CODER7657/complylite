@@ -1,0 +1,669 @@
+{
+  "dataset": {
+    "dir": "data\\sim\\hard",
+    "seed": 42,
+    "generator_version": "1.0",
+    "summary": {
+      "orders": 265943,
+      "trades": 93627,
+      "clients": 742,
+      "symbols": 30,
+      "days": 40,
+      "events": {
+        "wash_trade": 277,
+        "spoofing": 234,
+        "pump_and_dump": 11,
+        "front_running": 100
+      },
+      "positive_units": 947,
+      "hard_negative_units": 7195
+    },
+    "config": {
+      "seed": 42,
+      "n_days": 40,
+      "start_date": "2026-03-02",
+      "n_large_caps": 20,
+      "n_small_caps": 10,
+      "n_retail": 600,
+      "n_day_traders": 70,
+      "n_market_makers": 2,
+      "mm_symbols": 6,
+      "mm_quotes_per_symbol_day": 350.0,
+      "n_institutional": 12,
+      "n_dealers": 6,
+      "n_family_groups": 40,
+      "n_rings": 16,
+      "wash_per_day": 7.0,
+      "spoof_per_day": 6.0,
+      "front_run_per_day": 3.0,
+      "pump_dump_start_prob": 0.33,
+      "news_per_day": 0.4,
+      "internal_cross_prob": 0.08,
+      "wash_max_round_trips": 4,
+      "wash_fixed_price_prob": 0.3,
+      "spoof_max_layers": 3,
+      "spoof_size_mult_max": 4.0,
+      "front_run_via_dealer_prob": 0.3,
+      "pump_rise_max": 0.1,
+      "pump_circular_prob": 0.15,
+      "notes": {}
+    }
+  },
+  "split": {
+    "train": [
+      "2026-03-02",
+      "2026-03-03",
+      "2026-03-04",
+      "2026-03-05",
+      "2026-03-06",
+      "2026-03-09",
+      "2026-03-10",
+      "2026-03-11",
+      "2026-03-12",
+      "2026-03-13",
+      "2026-03-16",
+      "2026-03-17",
+      "2026-03-18",
+      "2026-03-19",
+      "2026-03-20",
+      "2026-03-23",
+      "2026-03-24",
+      "2026-03-25",
+      "2026-03-26",
+      "2026-03-27",
+      "2026-03-30",
+      "2026-03-31",
+      "2026-04-01",
+      "2026-04-02"
+    ],
+    "val": [
+      "2026-04-03",
+      "2026-04-06",
+      "2026-04-07",
+      "2026-04-08",
+      "2026-04-09",
+      "2026-04-10"
+    ],
+    "test": [
+      "2026-04-13",
+      "2026-04-14",
+      "2026-04-15",
+      "2026-04-16",
+      "2026-04-17",
+      "2026-04-20",
+      "2026-04-21",
+      "2026-04-22",
+      "2026-04-23",
+      "2026-04-24"
+    ]
+  },
+  "k_per_day": 50,
+  "model": {
+    "gbm_best_iteration": 172,
+    "blend_weight_on_rules": 0.0,
+    "n_features": 48
+  },
+  "validation": {
+    "days": 6,
+    "units": 2611,
+    "positive_units": 154,
+    "positives_by_pattern": {
+      "wash_trade": 77,
+      "spoofing": 33,
+      "pump_and_dump": 26,
+      "front_running": 18
+    },
+    "trades": 13770,
+    "oracle_precision_at_k": 0.5133,
+    "rules_workload_per_day": 50.0,
+    "methods": {
+      "rules": {
+        "pr_auc": 0.2421,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.14,
+          "recall": 0.2727,
+          "false_alarms_per_10k_trades": 187.4,
+          "recall_by_pattern": {
+            "wash_trade": 0.5455,
+            "spoofing": 0.0,
+            "pump_and_dump": 0.0,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_intraday_round_trip": 0.7209,
+            "none": 0.2171,
+            "hn_family_same_symbol": 0.0581,
+            "hn_market_maker": 0.0039
+          },
+          "precision_at_k_daily": 0.14
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.14,
+          "recall": 0.2727,
+          "false_alarms_per_10k_trades": 187.4,
+          "recall_by_pattern": {
+            "wash_trade": 0.5455,
+            "spoofing": 0.0,
+            "pump_and_dump": 0.0,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_intraday_round_trip": 0.7209,
+            "none": 0.2171,
+            "hn_family_same_symbol": 0.0581,
+            "hn_market_maker": 0.0039
+          }
+        }
+      },
+      "isolation_forest": {
+        "pr_auc": 0.2105,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.31,
+          "recall": 0.6039,
+          "false_alarms_per_10k_trades": 150.3,
+          "recall_by_pattern": {
+            "wash_trade": 0.8312,
+            "spoofing": 0.6667,
+            "pump_and_dump": 0.2692,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_market_maker": 0.3478,
+            "none": 0.2271,
+            "hn_family_same_symbol": 0.2029,
+            "hn_institutional_slicing": 0.1498,
+            "hn_shared_dealer_overlap": 0.0338,
+            "hn_intraday_round_trip": 0.029,
+            "hn_pump_bystander": 0.0097
+          },
+          "precision_at_k_daily": 0.31
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.31,
+          "recall": 0.6039,
+          "false_alarms_per_10k_trades": 150.3,
+          "recall_by_pattern": {
+            "wash_trade": 0.8312,
+            "spoofing": 0.6667,
+            "pump_and_dump": 0.2692,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_market_maker": 0.3478,
+            "none": 0.2271,
+            "hn_family_same_symbol": 0.2029,
+            "hn_institutional_slicing": 0.1498,
+            "hn_shared_dealer_overlap": 0.0338,
+            "hn_intraday_round_trip": 0.029,
+            "hn_pump_bystander": 0.0097
+          }
+        }
+      },
+      "gbm": {
+        "pr_auc": 0.9641,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.5067,
+          "recall": 0.987,
+          "false_alarms_per_10k_trades": 107.5,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 1.0,
+            "pump_and_dump": 0.9231,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.473,
+            "hn_intraday_round_trip": 0.3041,
+            "hn_family_same_symbol": 0.0946,
+            "hn_pump_bystander": 0.0541,
+            "hn_institutional_slicing": 0.0338,
+            "hn_news_momentum": 0.0203,
+            "hn_market_maker": 0.0135,
+            "hn_shared_dealer_overlap": 0.0068
+          },
+          "precision_at_k_daily": 0.5067
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.5067,
+          "recall": 0.987,
+          "false_alarms_per_10k_trades": 107.5,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 1.0,
+            "pump_and_dump": 0.9231,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.473,
+            "hn_intraday_round_trip": 0.3041,
+            "hn_family_same_symbol": 0.0946,
+            "hn_pump_bystander": 0.0541,
+            "hn_institutional_slicing": 0.0338,
+            "hn_news_momentum": 0.0203,
+            "hn_market_maker": 0.0135,
+            "hn_shared_dealer_overlap": 0.0068
+          }
+        }
+      },
+      "rules_plus_gbm": {
+        "pr_auc": 0.9641,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.5067,
+          "recall": 0.987,
+          "false_alarms_per_10k_trades": 107.5,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 1.0,
+            "pump_and_dump": 0.9231,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.473,
+            "hn_intraday_round_trip": 0.3041,
+            "hn_family_same_symbol": 0.0946,
+            "hn_pump_bystander": 0.0541,
+            "hn_institutional_slicing": 0.0338,
+            "hn_news_momentum": 0.0203,
+            "hn_market_maker": 0.0135,
+            "hn_shared_dealer_overlap": 0.0068
+          },
+          "precision_at_k_daily": 0.5067
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.5067,
+          "recall": 0.987,
+          "false_alarms_per_10k_trades": 107.5,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 1.0,
+            "pump_and_dump": 0.9231,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.473,
+            "hn_intraday_round_trip": 0.3041,
+            "hn_family_same_symbol": 0.0946,
+            "hn_pump_bystander": 0.0541,
+            "hn_institutional_slicing": 0.0338,
+            "hn_news_momentum": 0.0203,
+            "hn_market_maker": 0.0135,
+            "hn_shared_dealer_overlap": 0.0068
+          }
+        }
+      }
+    },
+    "rules_as_fired": {
+      "alerts_per_day": 99.5,
+      "precision": 0.0988,
+      "recall": 0.3831,
+      "false_alarms_per_10k_trades": 390.7,
+      "recall_by_pattern": {
+        "wash_trade": 0.7403,
+        "spoofing": 0.0,
+        "pump_and_dump": 0.0769,
+        "front_running": 0.0
+      },
+      "false_alarm_share_by_scenario": {
+        "hn_intraday_round_trip": 0.6283,
+        "none": 0.1952,
+        "hn_market_maker": 0.0929,
+        "hn_institutional_slicing": 0.0539,
+        "hn_family_same_symbol": 0.0297
+      }
+    },
+    "oracle_same_workload_fa_10k": 106.0
+  },
+  "holdout": {
+    "days": 10,
+    "units": 4339,
+    "positive_units": 254,
+    "positives_by_pattern": {
+      "wash_trade": 121,
+      "spoofing": 61,
+      "pump_and_dump": 48,
+      "front_running": 24
+    },
+    "trades": 23535,
+    "oracle_precision_at_k": 0.508,
+    "rules_workload_per_day": 50.0,
+    "methods": {
+      "rules": {
+        "pr_auc": 0.2353,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.138,
+          "recall": 0.2717,
+          "false_alarms_per_10k_trades": 183.1,
+          "recall_by_pattern": {
+            "wash_trade": 0.5702,
+            "spoofing": 0.0,
+            "pump_and_dump": 0.0,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_intraday_round_trip": 0.7889,
+            "none": 0.1624,
+            "hn_family_same_symbol": 0.0487
+          },
+          "precision_at_k_daily": 0.138
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.138,
+          "recall": 0.2717,
+          "false_alarms_per_10k_trades": 183.1,
+          "recall_by_pattern": {
+            "wash_trade": 0.5702,
+            "spoofing": 0.0,
+            "pump_and_dump": 0.0,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_intraday_round_trip": 0.7889,
+            "none": 0.1624,
+            "hn_family_same_symbol": 0.0487
+          }
+        }
+      },
+      "isolation_forest": {
+        "pr_auc": 0.2091,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.294,
+          "recall": 0.5787,
+          "false_alarms_per_10k_trades": 150.0,
+          "recall_by_pattern": {
+            "wash_trade": 0.8595,
+            "spoofing": 0.6557,
+            "pump_and_dump": 0.0625,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_market_maker": 0.3399,
+            "none": 0.289,
+            "hn_family_same_symbol": 0.2011,
+            "hn_institutional_slicing": 0.0935,
+            "hn_intraday_round_trip": 0.0312,
+            "hn_shared_dealer_overlap": 0.0227,
+            "hn_news_momentum": 0.0113,
+            "hn_pump_bystander": 0.0057,
+            "hn_multi_day_accumulation": 0.0057
+          },
+          "precision_at_k_daily": 0.294
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.294,
+          "recall": 0.5787,
+          "false_alarms_per_10k_trades": 150.0,
+          "recall_by_pattern": {
+            "wash_trade": 0.8595,
+            "spoofing": 0.6557,
+            "pump_and_dump": 0.0625,
+            "front_running": 0.0
+          },
+          "false_alarm_share_by_scenario": {
+            "hn_market_maker": 0.3399,
+            "none": 0.289,
+            "hn_family_same_symbol": 0.2011,
+            "hn_institutional_slicing": 0.0935,
+            "hn_intraday_round_trip": 0.0312,
+            "hn_shared_dealer_overlap": 0.0227,
+            "hn_news_momentum": 0.0113,
+            "hn_pump_bystander": 0.0057,
+            "hn_multi_day_accumulation": 0.0057
+          }
+        }
+      },
+      "gbm": {
+        "pr_auc": 0.9527,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.486,
+          "recall": 0.9567,
+          "false_alarms_per_10k_trades": 109.2,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 0.9672,
+            "pump_and_dump": 0.8125,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.428,
+            "hn_intraday_round_trip": 0.3658,
+            "hn_family_same_symbol": 0.1051,
+            "hn_pump_bystander": 0.0467,
+            "hn_institutional_slicing": 0.0272,
+            "hn_news_momentum": 0.0195,
+            "hn_shared_dealer_overlap": 0.0039,
+            "hn_multi_day_accumulation": 0.0039
+          },
+          "precision_at_k_daily": 0.486
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.486,
+          "recall": 0.9567,
+          "false_alarms_per_10k_trades": 109.2,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 0.9672,
+            "pump_and_dump": 0.8125,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.428,
+            "hn_intraday_round_trip": 0.3658,
+            "hn_family_same_symbol": 0.1051,
+            "hn_pump_bystander": 0.0467,
+            "hn_institutional_slicing": 0.0272,
+            "hn_news_momentum": 0.0195,
+            "hn_shared_dealer_overlap": 0.0039,
+            "hn_multi_day_accumulation": 0.0039
+          }
+        }
+      },
+      "rules_plus_gbm": {
+        "pr_auc": 0.9527,
+        "queue": {
+          "alerts_per_day": 50.0,
+          "precision": 0.486,
+          "recall": 0.9567,
+          "false_alarms_per_10k_trades": 109.2,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 0.9672,
+            "pump_and_dump": 0.8125,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.428,
+            "hn_intraday_round_trip": 0.3658,
+            "hn_family_same_symbol": 0.1051,
+            "hn_pump_bystander": 0.0467,
+            "hn_institutional_slicing": 0.0272,
+            "hn_news_momentum": 0.0195,
+            "hn_shared_dealer_overlap": 0.0039,
+            "hn_multi_day_accumulation": 0.0039
+          },
+          "precision_at_k_daily": 0.486
+        },
+        "same_workload_as_rules": {
+          "alerts_per_day": 50.0,
+          "precision": 0.486,
+          "recall": 0.9567,
+          "false_alarms_per_10k_trades": 109.2,
+          "recall_by_pattern": {
+            "wash_trade": 1.0,
+            "spoofing": 0.9672,
+            "pump_and_dump": 0.8125,
+            "front_running": 1.0
+          },
+          "false_alarm_share_by_scenario": {
+            "none": 0.428,
+            "hn_intraday_round_trip": 0.3658,
+            "hn_family_same_symbol": 0.1051,
+            "hn_pump_bystander": 0.0467,
+            "hn_institutional_slicing": 0.0272,
+            "hn_news_momentum": 0.0195,
+            "hn_shared_dealer_overlap": 0.0039,
+            "hn_multi_day_accumulation": 0.0039
+          }
+        }
+      }
+    },
+    "rules_as_fired": {
+      "alerts_per_day": 103.9,
+      "precision": 0.1011,
+      "recall": 0.4134,
+      "false_alarms_per_10k_trades": 396.9,
+      "recall_by_pattern": {
+        "wash_trade": 0.8678,
+        "spoofing": 0.0,
+        "pump_and_dump": 0.0,
+        "front_running": 0.0
+      },
+      "false_alarm_share_by_scenario": {
+        "hn_intraday_round_trip": 0.667,
+        "none": 0.167,
+        "hn_market_maker": 0.1049,
+        "hn_institutional_slicing": 0.0353,
+        "hn_family_same_symbol": 0.0257
+      }
+    },
+    "oracle_same_workload_fa_10k": 104.5,
+    "leave_one_pattern_out": {
+      "wash_trade": {
+        "recall_in_queue": 0.6198,
+        "pr_auc_this_pattern": 0.245
+      },
+      "spoofing": {
+        "recall_in_queue": 0.0164,
+        "pr_auc_this_pattern": 0.0193
+      },
+      "pump_and_dump": {
+        "recall_in_queue": 0.0,
+        "pr_auc_this_pattern": 0.0094
+      },
+      "front_running": {
+        "recall_in_queue": 0.0417,
+        "pr_auc_this_pattern": 0.0154
+      }
+    }
+  },
+  "feature_importance": {
+    "mean_abs_shap": {
+      "median_cancel_life_s": 0.5536,
+      "median_rt_qty_match": 0.5215,
+      "median_rt_seconds": 0.2935,
+      "max_trades_same_cp": 0.2135,
+      "day_return_bps": 0.2054,
+      "log_notional": 0.1985,
+      "cancel_order_drift_bps": 0.1828,
+      "net_buy_share_3d": 0.1672,
+      "notional_vs_prior": 0.1638,
+      "share_of_broker_flow": 0.161,
+      "cancel_fill_size_ratio": 0.1502,
+      "n_orders": 0.1369,
+      "n_trades": 0.1133,
+      "placed_vs_filled_imbalance_gap": 0.1095,
+      "ret_prior_3d_bps": 0.1001,
+      "cancelled_qty_share": 0.0991,
+      "is_day_trader": 0.0959,
+      "pre_trade_drift_15m_bps": 0.0953,
+      "cancel_to_fill_ratio": 0.09,
+      "n_round_trips": 0.0899,
+      "max_layer_levels": 0.0871,
+      "net_qty_ratio": 0.0811,
+      "n_cancelled": 0.0804,
+      "median_rt_price_diff_bps": 0.0758,
+      "order_to_trade_ratio": 0.0614,
+      "top_cp_share": 0.061,
+      "internal_cp_share": 0.0602,
+      "symbols_today": 0.0594,
+      "post_trade_drift_2m_bps": 0.0544,
+      "post_trade_drift_15m_bps": 0.0482,
+      "prior_active_days": 0.0407,
+      "pre_trade_drift_2m_bps": 0.0385,
+      "cp_pair_days_10d": 0.0339,
+      "n_linked_accounts": 0.0295,
+      "share_rt_under_5m": 0.0278,
+      "linked_cp_trades": 0.0193,
+      "linked_same_symbol_today": 0.015,
+      "linked_opposite_side_today": 0.0121,
+      "is_institutional": 0.0041,
+      "linked_cp_share": 0.004,
+      "spoof_sequences": 0.0015,
+      "log_dealer_flow_ratio": 0.0013,
+      "internal_cp_hhi": 0.0008,
+      "trades_ahead_of_dealer_flow": 0.0002,
+      "is_market_maker": 0.0,
+      "fast_cancel_share": 0.0,
+      "n_distinct_internal_cp": 0.0,
+      "self_cp_trades": 0.0
+    },
+    "gain_share": {
+      "median_rt_qty_match": 0.205,
+      "max_trades_same_cp": 0.1865,
+      "is_day_trader": 0.0662,
+      "median_cancel_life_s": 0.0585,
+      "median_rt_seconds": 0.0386,
+      "log_notional": 0.0372,
+      "cancel_to_fill_ratio": 0.0363,
+      "placed_vs_filled_imbalance_gap": 0.032,
+      "max_layer_levels": 0.0301,
+      "internal_cp_share": 0.0283,
+      "top_cp_share": 0.0268,
+      "cancel_fill_size_ratio": 0.0235,
+      "notional_vs_prior": 0.0206,
+      "net_qty_ratio": 0.0176,
+      "n_round_trips": 0.0172,
+      "cancelled_qty_share": 0.0156,
+      "n_trades": 0.0148,
+      "pre_trade_drift_15m_bps": 0.0135,
+      "n_orders": 0.0128,
+      "day_return_bps": 0.0126,
+      "n_cancelled": 0.0113,
+      "cancel_order_drift_bps": 0.01,
+      "share_of_broker_flow": 0.0097,
+      "prior_active_days": 0.0088,
+      "net_buy_share_3d": 0.0087,
+      "order_to_trade_ratio": 0.0087,
+      "share_rt_under_5m": 0.0086,
+      "ret_prior_3d_bps": 0.008,
+      "median_rt_price_diff_bps": 0.0076,
+      "cp_pair_days_10d": 0.0058,
+      "linked_cp_trades": 0.0042,
+      "symbols_today": 0.003,
+      "post_trade_drift_15m_bps": 0.0027,
+      "pre_trade_drift_2m_bps": 0.0027,
+      "post_trade_drift_2m_bps": 0.0023,
+      "linked_opposite_side_today": 0.0014,
+      "n_linked_accounts": 0.0007,
+      "spoof_sequences": 0.0005,
+      "linked_cp_share": 0.0005,
+      "linked_same_symbol_today": 0.0002,
+      "log_dealer_flow_ratio": 0.0002,
+      "is_institutional": 0.0002,
+      "internal_cp_hhi": 0.0001,
+      "trades_ahead_of_dealer_flow": 0.0,
+      "fast_cancel_share": 0.0,
+      "is_market_maker": 0.0,
+      "self_cp_trades": 0.0,
+      "n_distinct_internal_cp": 0.0
+    }
+  },
+  "timing_seconds": {
+    "features_and_rules": 1.6,
+    "training": 0.5,
+    "total": 6.5
+  }
+}
