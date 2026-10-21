@@ -1,4 +1,5 @@
 """Offline tests for the case-note agent and its API. The language model is always the stub."""
+import json
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -158,3 +159,25 @@ def test_groq_client_gives_up_fast_on_a_daily_quota_and_retries_a_short_limit():
         lambda r: httpx.Response(429, headers={"retry-after": "3000"}, json={"error": {"message": "day"}})))
     with pytest.raises(RuntimeError, match="quota"):
         c.chat([{"role": "user", "content": "hi"}], None)
+
+
+def test_groq_client_retries_without_tools_when_the_model_invents_one():
+    import httpx
+
+    from app.surveillance.agent.llm import GroqClient
+
+    bodies = []
+
+    def handler(request):
+        body = json.loads(request.content)
+        bodies.append(body)
+        if "tools" in body:
+            return httpx.Response(400, json={"error": {"message": "Tool call validation failed: attempted to call tool 'json' which was not in request.tools"}})
+        return httpx.Response(200, json={"choices": [{"message": {"content": "{\"ok\": true}"}}], "usage": {"total_tokens": 10}})
+
+    client = GroqClient(api_key="test-not-real")
+    client._http = httpx.Client(transport=httpx.MockTransport(handler))
+    out = client.chat([{"role": "user", "content": "hi"}], [{"type": "function", "function": {"name": "sql_query"}}])
+    assert out["content"] == "{\"ok\": true}"
+    assert "tools" in bodies[0] and "tools" not in bodies[1]
+    assert client.usage["invented_tool_retries"] == 1

@@ -59,10 +59,11 @@ def main():
     ap.add_argument("--n", type=int, default=20)
     ap.add_argument("--pace", type=float, default=None, help="seconds to wait between alerts (default 4 for groq)")
     ap.add_argument("--llm", choices=["groq", "stub", "stub-mistakes"], default="groq")
+    ap.add_argument("--model", default=None, help="Groq model id (default: openai/gpt-oss-120b)")
     args = ap.parse_args()
 
     tools = make_tools(args.data)
-    llm = GroqClient() if args.llm == "groq" else StubLLM(mistakes=1 if args.llm == "stub-mistakes" else 0)
+    llm = (GroqClient(model=args.model) if args.model else GroqClient()) if args.llm == "groq" else StubLLM(mistakes=1 if args.llm == "stub-mistakes" else 0)
     alerts = pick_alerts(tools.con, args.n)
     lab = duckdb.connect(str(Path(args.data) / LABELS_DB), read_only=True)
     truth = {f"{d.strftime('%Y%m%d')}-{c}-{s}": p for c, s, d, p in lab.execute(
