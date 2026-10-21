@@ -256,3 +256,7 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Simulated datasets and trained models (regenerate with scripts/simulate.py and scripts/run_eval.py)
+data/
+reports_ci/
