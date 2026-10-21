@@ -135,3 +135,26 @@ def test_note_endpoint_cites_trades(client):
 
 def test_note_endpoint_unknown_alert_is_404(client):
     assert client.get("/api/v1/surveillance/alerts/nope/note").status_code == 404
+
+
+def test_groq_client_gives_up_fast_on_a_daily_quota_and_retries_a_short_limit():
+    import httpx
+
+    from app.surveillance.agent.llm import GroqClient
+
+    calls = {"n": 0}
+
+    def handler(request):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return httpx.Response(429, headers={"retry-after": "0.01"}, json={"error": {"message": "burst"}})
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}], "usage": {"total_tokens": 5}})
+
+    c = GroqClient(api_key="test-key")
+    c._http = httpx.Client(transport=httpx.MockTransport(handler))
+    assert c.chat([{"role": "user", "content": "hi"}], None)["content"] == "ok" and calls["n"] == 2
+
+    c._http = httpx.Client(transport=httpx.MockTransport(
+        lambda r: httpx.Response(429, headers={"retry-after": "3000"}, json={"error": {"message": "day"}})))
+    with pytest.raises(RuntimeError, match="quota"):
+        c.chat([{"role": "user", "content": "hi"}], None)

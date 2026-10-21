@@ -13,6 +13,7 @@ from app.surveillance.paths import REPO_ROOT
 
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 GROQ_MODEL = "openai/gpt-oss-120b"
+MAX_WAIT_S = 75.0
 
 
 class ChatClient(Protocol):
@@ -79,6 +80,9 @@ class GroqClient:
                 continue
             if r.status_code == 429 or r.status_code >= 500:
                 wait = float(r.headers.get("retry-after", 0) or 0) or min(60.0, 4.0 * (attempt + 1))
+                if r.status_code == 429 and wait > MAX_WAIT_S:
+                    # A daily quota, not a burst limit: waiting would stall the analyst. Let the caller fall back.
+                    raise RuntimeError(f"Groq quota exhausted (retry in {wait:.0f}s)")
                 self.usage["rate_limit_waits"] += 1
                 time.sleep(min(wait, 60.0))
                 continue
