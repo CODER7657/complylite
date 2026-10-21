@@ -24,6 +24,16 @@ jobs:
       - name: Run tests
         run: |
           PYTHONPATH=. pytest app/tests -q
+      - name: Lint surveillance code
+        working-directory: .
+        run: ruff check backend/app/surveillance backend/app/api/surveillance.py backend/app/tests scripts/run_eval.py scripts/run_agent_eval.py
+      - name: Eval smoke test on the tiny dataset (no network, stub model)
+        working-directory: .
+        run: |
+          python scripts/simulate.py --preset tiny --out ci_data/tiny
+          python scripts/run_eval.py --data ci_data/tiny --out ci_reports --smoke
+          python scripts/run_agent_eval.py --data ci_data/tiny --out ci_reports --llm stub-mistakes --n 4
+          test -s ci_reports/agent_eval.json
 
   frontend:
     runs-on: ubuntu-latest
