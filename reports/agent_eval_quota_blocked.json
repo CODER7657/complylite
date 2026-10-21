@@ -1,0 +1,2827 @@
+{
+  "summary": {
+    "llm": "groq:openai/gpt-oss-120b",
+    "alerts": 20,
+    "pass_first_try": 0,
+    "pass_after_retry": 0,
+    "fallback_template": 20,
+    "template_passed_checker": 20,
+    "api_errors": 20,
+    "pass_rate_first_try": 0.0,
+    "pass_rate_after_retry": 0.0,
+    "latency_s": {
+      "median": 0.1,
+      "p95": 41.0,
+      "max": 41.0
+    },
+    "wall_clock_s": 42.4,
+    "mean_tool_calls": 0.0,
+    "first_try_failure_reasons": {},
+    "conclusion_vs_truth": {
+      "true_alert": {
+        "ESCALATE": 20
+      },
+      "false_alert": {}
+    },
+    "usage": {
+      "prompt_tokens": 1096,
+      "completion_tokens": 104,
+      "requests": 1,
+      "rate_limit_waits": 1
+    }
+  },
+  "results": [
+    {
+      "alert_id": "20260413-C00546-SC06",
+      "source": "template",
+      "note": {
+        "headline": "C00546 / SC06 / 2026-04-13: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-13 C00546 made 22 trades in SC06 (11 buys, 11 sells, 27638 shares, net 0) over 99.2 minutes.",
+            "trade_ids": [
+              "T00074219",
+              "T00074250",
+              "T00074293",
+              "T00074350",
+              "T00074374",
+              "T00074429",
+              "T00074446",
+              "T00074461",
+              "T00074489",
+              "T00074501",
+              "T00074534",
+              "T00074558",
+              "T00074567",
+              "T00074591",
+              "T00074608",
+              "T00074628",
+              "T00074647",
+              "T00074696",
+              "T00074704",
+              "T00074738",
+              "T00074751",
+              "T00074785"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 11.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 11.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 27638.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 99.25
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 22 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00074219",
+              "T00074250",
+              "T00074293",
+              "T00074350",
+              "T00074374",
+              "T00074429",
+              "T00074446",
+              "T00074461",
+              "T00074489",
+              "T00074501",
+              "T00074534",
+              "T00074558",
+              "T00074567",
+              "T00074591",
+              "T00074608",
+              "T00074628",
+              "T00074647",
+              "T00074696",
+              "T00074704",
+              "T00074738",
+              "T00074751",
+              "T00074785"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 22 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00074219",
+              "T00074250",
+              "T00074293",
+              "T00074350",
+              "T00074374",
+              "T00074429",
+              "T00074446",
+              "T00074461",
+              "T00074489",
+              "T00074501",
+              "T00074534",
+              "T00074558",
+              "T00074567",
+              "T00074591",
+              "T00074608",
+              "T00074628",
+              "T00074647",
+              "T00074696",
+              "T00074704",
+              "T00074738",
+              "T00074751",
+              "T00074785"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00074219",
+              "T00074250",
+              "T00074293",
+              "T00074350",
+              "T00074374",
+              "T00074429",
+              "T00074446",
+              "T00074461",
+              "T00074489",
+              "T00074501"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 22
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 41.02,
+      "error": "RuntimeError: Groq quota exhausted (retry in 820s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260413-C00482-SC04",
+      "source": "template",
+      "note": {
+        "headline": "C00482 / SC04 / 2026-04-13: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-13 C00482 made 16 trades in SC04 (8 buys, 8 sells, 19888 shares, net 0) over 72.8 minutes.",
+            "trade_ids": [
+              "T00073832",
+              "T00073895",
+              "T00073913",
+              "T00073966",
+              "T00073978",
+              "T00074048",
+              "T00074075",
+              "T00074151",
+              "T00074193",
+              "T00074251",
+              "T00074298",
+              "T00074322",
+              "T00074326",
+              "T00074355",
+              "T00074383",
+              "T00074413"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 16.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 8.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 8.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 19888.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 72.83333333333333
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 16 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00073832",
+              "T00073895",
+              "T00073913",
+              "T00073966",
+              "T00073978",
+              "T00074048",
+              "T00074075",
+              "T00074151",
+              "T00074193",
+              "T00074251",
+              "T00074298",
+              "T00074322",
+              "T00074326",
+              "T00074355",
+              "T00074383",
+              "T00074413"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 16.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 16 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00073832",
+              "T00073895",
+              "T00073913",
+              "T00073966",
+              "T00073978",
+              "T00074048",
+              "T00074075",
+              "T00074151",
+              "T00074193",
+              "T00074251",
+              "T00074298",
+              "T00074322",
+              "T00074326",
+              "T00074355",
+              "T00074383",
+              "T00074413"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 16.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 16
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.08,
+      "error": "RuntimeError: Groq quota exhausted (retry in 377s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260414-C00693-LC08",
+      "source": "template",
+      "note": {
+        "headline": "C00693 / LC08 / 2026-04-14: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-14 C00693 made 20 trades in LC08 (10 buys, 10 sells, 950 shares, net 0) over 86.4 minutes.",
+            "trade_ids": [
+              "T00077031",
+              "T00077051",
+              "T00077073",
+              "T00077081",
+              "T00077086",
+              "T00077094",
+              "T00077121",
+              "T00077133",
+              "T00077166",
+              "T00077186",
+              "T00077202",
+              "T00077245",
+              "T00077267",
+              "T00077304",
+              "T00077307",
+              "T00077341",
+              "T00077360",
+              "T00077406",
+              "T00077434",
+              "T00077485"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 20.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 10.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 10.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 950.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 86.43333333333334
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 20 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00077031",
+              "T00077051",
+              "T00077073",
+              "T00077081",
+              "T00077086",
+              "T00077094",
+              "T00077121",
+              "T00077133",
+              "T00077166",
+              "T00077186",
+              "T00077202",
+              "T00077245",
+              "T00077267",
+              "T00077304",
+              "T00077307",
+              "T00077341",
+              "T00077360",
+              "T00077406",
+              "T00077434",
+              "T00077485"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 20.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00077031",
+              "T00077051",
+              "T00077073",
+              "T00077081",
+              "T00077086",
+              "T00077094",
+              "T00077121",
+              "T00077133",
+              "T00077166",
+              "T00077186"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 8,
+          "cited_trades": 20
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 509s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260414-C00109-SC05",
+      "source": "template",
+      "note": {
+        "headline": "C00109 / SC05 / 2026-04-14: 1 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-14 C00109 made 4 trades in SC05 (0 buys, 4 sells, 1572 shares, net -1572) over 31.8 minutes.",
+            "trade_ids": [
+              "T00076988",
+              "T00077055",
+              "T00077091",
+              "T00077145"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 4.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 0.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 4.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 1572.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": -1572.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 31.816666666666666
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 1 fills bracketed by larger opposite orders cancelled soon after.",
+            "trade_ids": [
+              "T00076988",
+              "T00077055",
+              "T00077091",
+              "T00077145"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 4.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 8,
+          "cited_trades": 4
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.05,
+      "error": "RuntimeError: Groq quota exhausted (retry in 496s)",
+      "truth": "spoofing"
+    },
+    {
+      "alert_id": "20260415-C00262-SC10",
+      "source": "template",
+      "note": {
+        "headline": "C00262 / SC10 / 2026-04-15: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-15 C00262 made 12 trades in SC10 (6 buys, 6 sells, 3892 shares, net 0) over 42.2 minutes.",
+            "trade_ids": [
+              "T00079305",
+              "T00079334",
+              "T00079346",
+              "T00079368",
+              "T00079397",
+              "T00079405",
+              "T00079411",
+              "T00079430",
+              "T00079458",
+              "T00079460",
+              "T00079475",
+              "T00079519"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 12.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 6.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 6.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 3892.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 42.21666666666667
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 12 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00079305",
+              "T00079334",
+              "T00079346",
+              "T00079368",
+              "T00079397",
+              "T00079405",
+              "T00079411",
+              "T00079430",
+              "T00079458",
+              "T00079460",
+              "T00079475",
+              "T00079519"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 12.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 12 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00079305",
+              "T00079334",
+              "T00079346",
+              "T00079368",
+              "T00079397",
+              "T00079405",
+              "T00079411",
+              "T00079430",
+              "T00079458",
+              "T00079460",
+              "T00079475",
+              "T00079519"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 12.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00079305",
+              "T00079334",
+              "T00079346",
+              "T00079368",
+              "T00079397",
+              "T00079405",
+              "T00079411",
+              "T00079430",
+              "T00079458",
+              "T00079460"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 12
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.08,
+      "error": "RuntimeError: Groq quota exhausted (retry in 380s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260415-C00546-SC10",
+      "source": "template",
+      "note": {
+        "headline": "C00546 / SC10 / 2026-04-15: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-15 C00546 made 12 trades in SC10 (6 buys, 6 sells, 3892 shares, net 0) over 42.2 minutes.",
+            "trade_ids": [
+              "T00079306",
+              "T00079335",
+              "T00079345",
+              "T00079369",
+              "T00079398",
+              "T00079404",
+              "T00079412",
+              "T00079431",
+              "T00079457",
+              "T00079461",
+              "T00079476",
+              "T00079520"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 12.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 6.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 6.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 3892.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 42.21666666666667
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 12 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00079306",
+              "T00079335",
+              "T00079345",
+              "T00079369",
+              "T00079398",
+              "T00079404",
+              "T00079412",
+              "T00079431",
+              "T00079457",
+              "T00079461",
+              "T00079476",
+              "T00079520"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 12.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 12 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00079306",
+              "T00079335",
+              "T00079345",
+              "T00079369",
+              "T00079398",
+              "T00079404",
+              "T00079412",
+              "T00079431",
+              "T00079457",
+              "T00079461",
+              "T00079476",
+              "T00079520"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 12.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00079306",
+              "T00079335",
+              "T00079345",
+              "T00079369",
+              "T00079398",
+              "T00079404",
+              "T00079412",
+              "T00079431",
+              "T00079457",
+              "T00079461"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 12
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 380s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260416-C00172-LC01",
+      "source": "template",
+      "note": {
+        "headline": "C00172 / LC01 / 2026-04-16: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-16 C00172 made 20 trades in LC01 (10 buys, 10 sells, 1372 shares, net 0) over 88.0 minutes.",
+            "trade_ids": [
+              "T00080670",
+              "T00080694",
+              "T00080714",
+              "T00080783",
+              "T00080812",
+              "T00080839",
+              "T00080889",
+              "T00080960",
+              "T00081013",
+              "T00081083",
+              "T00081121",
+              "T00081191",
+              "T00081204",
+              "T00081238",
+              "T00081260",
+              "T00081363",
+              "T00081403",
+              "T00081407",
+              "T00081443",
+              "T00081504"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 20.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 10.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 10.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 1372.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 88.01666666666667
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 20 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00080670",
+              "T00080694",
+              "T00080714",
+              "T00080783",
+              "T00080812",
+              "T00080839",
+              "T00080889",
+              "T00080960",
+              "T00081013",
+              "T00081083",
+              "T00081121",
+              "T00081191",
+              "T00081204",
+              "T00081238",
+              "T00081260",
+              "T00081363",
+              "T00081403",
+              "T00081407",
+              "T00081443",
+              "T00081504"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 20.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 20 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00080670",
+              "T00080694",
+              "T00080714",
+              "T00080783",
+              "T00080812",
+              "T00080839",
+              "T00080889",
+              "T00080960",
+              "T00081013",
+              "T00081083",
+              "T00081121",
+              "T00081191",
+              "T00081204",
+              "T00081238",
+              "T00081260",
+              "T00081363",
+              "T00081403",
+              "T00081407",
+              "T00081443",
+              "T00081504"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 20.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00080670",
+              "T00080694",
+              "T00080714",
+              "T00080783",
+              "T00080812",
+              "T00080839",
+              "T00080889",
+              "T00080960",
+              "T00081013",
+              "T00081083"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 20
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.08,
+      "error": "RuntimeError: Groq quota exhausted (retry in 519s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260416-C00521-SC09",
+      "source": "template",
+      "note": {
+        "headline": "C00521 / SC09 / 2026-04-16: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-16 C00521 made 24 trades in SC09 (12 buys, 12 sells, 198252 shares, net 0) over 75.8 minutes.",
+            "trade_ids": [
+              "T00080957",
+              "T00080968",
+              "T00081004",
+              "T00081034",
+              "T00081050",
+              "T00081071",
+              "T00081110",
+              "T00081130",
+              "T00081148",
+              "T00081156",
+              "T00081167",
+              "T00081198",
+              "T00081255",
+              "T00081353",
+              "T00081376",
+              "T00081474",
+              "T00081488",
+              "T00081555",
+              "T00081560",
+              "T00081572",
+              "T00081612",
+              "T00081648",
+              "T00081664",
+              "T00081672"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 12.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 12.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 198252.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 75.78333333333333
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00080957",
+              "T00080968",
+              "T00081004",
+              "T00081034",
+              "T00081050",
+              "T00081071",
+              "T00081110",
+              "T00081130",
+              "T00081148",
+              "T00081156",
+              "T00081167",
+              "T00081198",
+              "T00081255",
+              "T00081353",
+              "T00081376",
+              "T00081474",
+              "T00081488",
+              "T00081555",
+              "T00081560",
+              "T00081572",
+              "T00081612",
+              "T00081648",
+              "T00081664",
+              "T00081672"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00080957",
+              "T00080968",
+              "T00081004",
+              "T00081034",
+              "T00081050",
+              "T00081071",
+              "T00081110",
+              "T00081130",
+              "T00081148",
+              "T00081156",
+              "T00081167",
+              "T00081198",
+              "T00081255",
+              "T00081353",
+              "T00081376",
+              "T00081474",
+              "T00081488",
+              "T00081555",
+              "T00081560",
+              "T00081572",
+              "T00081612",
+              "T00081648",
+              "T00081664",
+              "T00081672"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 24
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 507s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260417-C00702-LC15",
+      "source": "template",
+      "note": {
+        "headline": "C00702 / LC15 / 2026-04-17: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-17 C00702 made 24 trades in LC15 (12 buys, 12 sells, 3856 shares, net 0) over 77.5 minutes.",
+            "trade_ids": [
+              "T00084581",
+              "T00084598",
+              "T00084634",
+              "T00084649",
+              "T00084693",
+              "T00084713",
+              "T00084718",
+              "T00084764",
+              "T00084770",
+              "T00084811",
+              "T00084817",
+              "T00084829",
+              "T00084836",
+              "T00084855",
+              "T00084873",
+              "T00084885",
+              "T00084897",
+              "T00084928",
+              "T00084936",
+              "T00084947",
+              "T00084972",
+              "T00085020",
+              "T00085054",
+              "T00085058"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 12.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 12.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 3856.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 77.55
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00084581",
+              "T00084598",
+              "T00084634",
+              "T00084649",
+              "T00084693",
+              "T00084713",
+              "T00084718",
+              "T00084764",
+              "T00084770",
+              "T00084811",
+              "T00084817",
+              "T00084829",
+              "T00084836",
+              "T00084855",
+              "T00084873",
+              "T00084885",
+              "T00084897",
+              "T00084928",
+              "T00084936",
+              "T00084947",
+              "T00084972",
+              "T00085020",
+              "T00085054",
+              "T00085058"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00084581",
+              "T00084598",
+              "T00084634",
+              "T00084649",
+              "T00084693",
+              "T00084713",
+              "T00084718",
+              "T00084764",
+              "T00084770",
+              "T00084811",
+              "T00084817",
+              "T00084829",
+              "T00084836",
+              "T00084855",
+              "T00084873",
+              "T00084885",
+              "T00084897",
+              "T00084928",
+              "T00084936",
+              "T00084947",
+              "T00084972",
+              "T00085020",
+              "T00085054",
+              "T00085058"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00084581",
+              "T00084598",
+              "T00084634",
+              "T00084649",
+              "T00084693",
+              "T00084713",
+              "T00084718",
+              "T00084764",
+              "T00084770",
+              "T00084811"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 24
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.08,
+      "error": "RuntimeError: Groq quota exhausted (retry in 518s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260417-C00714-LC15",
+      "source": "template",
+      "note": {
+        "headline": "C00714 / LC15 / 2026-04-17: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-17 C00714 made 24 trades in LC15 (12 buys, 12 sells, 3856 shares, net 0) over 77.5 minutes.",
+            "trade_ids": [
+              "T00084582",
+              "T00084599",
+              "T00084633",
+              "T00084650",
+              "T00084692",
+              "T00084712",
+              "T00084719",
+              "T00084763",
+              "T00084769",
+              "T00084810",
+              "T00084816",
+              "T00084828",
+              "T00084837",
+              "T00084856",
+              "T00084872",
+              "T00084884",
+              "T00084896",
+              "T00084929",
+              "T00084935",
+              "T00084946",
+              "T00084971",
+              "T00085019",
+              "T00085053",
+              "T00085057"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 12.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 12.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 3856.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 77.55
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00084582",
+              "T00084599",
+              "T00084633",
+              "T00084650",
+              "T00084692",
+              "T00084712",
+              "T00084719",
+              "T00084763",
+              "T00084769",
+              "T00084810",
+              "T00084816",
+              "T00084828",
+              "T00084837",
+              "T00084856",
+              "T00084872",
+              "T00084884",
+              "T00084896",
+              "T00084929",
+              "T00084935",
+              "T00084946",
+              "T00084971",
+              "T00085019",
+              "T00085053",
+              "T00085057"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00084582",
+              "T00084599",
+              "T00084633",
+              "T00084650",
+              "T00084692",
+              "T00084712",
+              "T00084719",
+              "T00084763",
+              "T00084769",
+              "T00084810",
+              "T00084816",
+              "T00084828",
+              "T00084837",
+              "T00084856",
+              "T00084872",
+              "T00084884",
+              "T00084896",
+              "T00084929",
+              "T00084935",
+              "T00084946",
+              "T00084971",
+              "T00085019",
+              "T00085053",
+              "T00085057"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00084582",
+              "T00084599",
+              "T00084633",
+              "T00084650",
+              "T00084692",
+              "T00084712",
+              "T00084719",
+              "T00084763",
+              "T00084769",
+              "T00084810"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 24
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.08,
+      "error": "RuntimeError: Groq quota exhausted (retry in 388s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260420-C00627-SC09",
+      "source": "template",
+      "note": {
+        "headline": "C00627 / SC09 / 2026-04-20: 1 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-20 C00627 made 20 trades in SC09 (10 buys, 10 sells, 9942 shares, net 0) over 82.5 minutes.",
+            "trade_ids": [
+              "T00085585",
+              "T00085608",
+              "T00085665",
+              "T00085679",
+              "T00085739",
+              "T00085802",
+              "T00085821",
+              "T00085879",
+              "T00085947",
+              "T00086000",
+              "T00086008",
+              "T00086049",
+              "T00086112",
+              "T00086119",
+              "T00086163",
+              "T00086204",
+              "T00086246",
+              "T00086325",
+              "T00086352",
+              "T00086366"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 20.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 10.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 10.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 9942.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 82.55
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 20 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00085585",
+              "T00085608",
+              "T00085665",
+              "T00085679",
+              "T00085739",
+              "T00085802",
+              "T00085821",
+              "T00085879",
+              "T00085947",
+              "T00086000",
+              "T00086008",
+              "T00086049",
+              "T00086112",
+              "T00086119",
+              "T00086163",
+              "T00086204",
+              "T00086246",
+              "T00086325",
+              "T00086352",
+              "T00086366"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 20.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 8,
+          "cited_trades": 20
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 357s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260420-C00714-SC01",
+      "source": "template",
+      "note": {
+        "headline": "C00714 / SC01 / 2026-04-20: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-20 C00714 made 18 trades in SC01 (9 buys, 9 sells, 26578 shares, net 0) over 63.6 minutes.",
+            "trade_ids": [
+              "T00086988",
+              "T00087032",
+              "T00087040",
+              "T00087060",
+              "T00087071",
+              "T00087097",
+              "T00087101",
+              "T00087113",
+              "T00087152",
+              "T00087192",
+              "T00087210",
+              "T00087216",
+              "T00087243",
+              "T00087245",
+              "T00087287",
+              "T00087323",
+              "T00087325",
+              "T00087362"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 18.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 9.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 9.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 26578.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 63.6
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 18 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00086988",
+              "T00087032",
+              "T00087040",
+              "T00087060",
+              "T00087071",
+              "T00087097",
+              "T00087101",
+              "T00087113",
+              "T00087152",
+              "T00087192",
+              "T00087210",
+              "T00087216",
+              "T00087243",
+              "T00087245",
+              "T00087287",
+              "T00087323",
+              "T00087325",
+              "T00087362"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 18.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 18 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00086988",
+              "T00087032",
+              "T00087040",
+              "T00087060",
+              "T00087071",
+              "T00087097",
+              "T00087101",
+              "T00087113",
+              "T00087152",
+              "T00087192",
+              "T00087210",
+              "T00087216",
+              "T00087243",
+              "T00087245",
+              "T00087287",
+              "T00087323",
+              "T00087325",
+              "T00087362"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 18.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00086988",
+              "T00087032",
+              "T00087040",
+              "T00087060",
+              "T00087071",
+              "T00087097",
+              "T00087101",
+              "T00087113",
+              "T00087152",
+              "T00087192"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 18
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 518s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260421-C00349-LC09",
+      "source": "template",
+      "note": {
+        "headline": "C00349 / LC09 / 2026-04-21: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-21 C00349 made 24 trades in LC09 (12 buys, 12 sells, 16990 shares, net 0) over 93.7 minutes.",
+            "trade_ids": [
+              "T00089647",
+              "T00089686",
+              "T00089714",
+              "T00089746",
+              "T00089794",
+              "T00089824",
+              "T00089843",
+              "T00089854",
+              "T00089899",
+              "T00089923",
+              "T00089962",
+              "T00089972",
+              "T00090020",
+              "T00090052",
+              "T00090062",
+              "T00090106",
+              "T00090139",
+              "T00090160",
+              "T00090187",
+              "T00090261",
+              "T00090287",
+              "T00090318",
+              "T00090343",
+              "T00090372"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 12.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 12.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 16990.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 93.7
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00089647",
+              "T00089686",
+              "T00089714",
+              "T00089746",
+              "T00089794",
+              "T00089824",
+              "T00089843",
+              "T00089854",
+              "T00089899",
+              "T00089923",
+              "T00089962",
+              "T00089972",
+              "T00090020",
+              "T00090052",
+              "T00090062",
+              "T00090106",
+              "T00090139",
+              "T00090160",
+              "T00090187",
+              "T00090261",
+              "T00090287",
+              "T00090318",
+              "T00090343",
+              "T00090372"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00089647",
+              "T00089686",
+              "T00089714",
+              "T00089746",
+              "T00089794",
+              "T00089824",
+              "T00089843",
+              "T00089854",
+              "T00089899",
+              "T00089923",
+              "T00089962",
+              "T00089972",
+              "T00090020",
+              "T00090052",
+              "T00090062",
+              "T00090106",
+              "T00090139",
+              "T00090160",
+              "T00090187",
+              "T00090261",
+              "T00090287",
+              "T00090318",
+              "T00090343",
+              "T00090372"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00089647",
+              "T00089686",
+              "T00089714",
+              "T00089746",
+              "T00089794",
+              "T00089824",
+              "T00089843",
+              "T00089854",
+              "T00089899",
+              "T00089923"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 24
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.08,
+      "error": "RuntimeError: Groq quota exhausted (retry in 518s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260421-C00153-LC09",
+      "source": "template",
+      "note": {
+        "headline": "C00153 / LC09 / 2026-04-21: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-21 C00153 made 24 trades in LC09 (12 buys, 12 sells, 16990 shares, net 0) over 93.7 minutes.",
+            "trade_ids": [
+              "T00089648",
+              "T00089687",
+              "T00089713",
+              "T00089747",
+              "T00089793",
+              "T00089825",
+              "T00089844",
+              "T00089853",
+              "T00089900",
+              "T00089922",
+              "T00089961",
+              "T00089973",
+              "T00090019",
+              "T00090051",
+              "T00090061",
+              "T00090107",
+              "T00090140",
+              "T00090159",
+              "T00090188",
+              "T00090260",
+              "T00090288",
+              "T00090319",
+              "T00090342",
+              "T00090373"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 12.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 12.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 16990.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 93.7
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00089648",
+              "T00089687",
+              "T00089713",
+              "T00089747",
+              "T00089793",
+              "T00089825",
+              "T00089844",
+              "T00089853",
+              "T00089900",
+              "T00089922",
+              "T00089961",
+              "T00089973",
+              "T00090019",
+              "T00090051",
+              "T00090061",
+              "T00090107",
+              "T00090140",
+              "T00090159",
+              "T00090188",
+              "T00090260",
+              "T00090288",
+              "T00090319",
+              "T00090342",
+              "T00090373"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 24 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00089648",
+              "T00089687",
+              "T00089713",
+              "T00089747",
+              "T00089793",
+              "T00089825",
+              "T00089844",
+              "T00089853",
+              "T00089900",
+              "T00089922",
+              "T00089961",
+              "T00089973",
+              "T00090019",
+              "T00090051",
+              "T00090061",
+              "T00090107",
+              "T00090140",
+              "T00090159",
+              "T00090188",
+              "T00090260",
+              "T00090288",
+              "T00090319",
+              "T00090342",
+              "T00090373"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 24.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00089648",
+              "T00089687",
+              "T00089713",
+              "T00089747",
+              "T00089793",
+              "T00089825",
+              "T00089844",
+              "T00089853",
+              "T00089900",
+              "T00089922"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 24
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.08,
+      "error": "RuntimeError: Groq quota exhausted (retry in 379s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260422-C00546-LC10",
+      "source": "template",
+      "note": {
+        "headline": "C00546 / LC10 / 2026-04-22: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-22 C00546 made 16 trades in LC10 (8 buys, 8 sells, 1212 shares, net 0) over 48.9 minutes.",
+            "trade_ids": [
+              "T00092044",
+              "T00092057",
+              "T00092065",
+              "T00092087",
+              "T00092099",
+              "T00092114",
+              "T00092134",
+              "T00092150",
+              "T00092169",
+              "T00092173",
+              "T00092205",
+              "T00092258",
+              "T00092278",
+              "T00092292",
+              "T00092308",
+              "T00092315"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 16.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 8.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 8.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 1212.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 48.88333333333333
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 16 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00092044",
+              "T00092057",
+              "T00092065",
+              "T00092087",
+              "T00092099",
+              "T00092114",
+              "T00092134",
+              "T00092150",
+              "T00092169",
+              "T00092173",
+              "T00092205",
+              "T00092258",
+              "T00092278",
+              "T00092292",
+              "T00092308",
+              "T00092315"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 16.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 16 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00092044",
+              "T00092057",
+              "T00092065",
+              "T00092087",
+              "T00092099",
+              "T00092114",
+              "T00092134",
+              "T00092150",
+              "T00092169",
+              "T00092173",
+              "T00092205",
+              "T00092258",
+              "T00092278",
+              "T00092292",
+              "T00092308",
+              "T00092315"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 16.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 16
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 506s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260422-C00153-SC02",
+      "source": "template",
+      "note": {
+        "headline": "C00153 / SC02 / 2026-04-22: 3 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-22 C00153 made 14 trades in SC02 (7 buys, 7 sells, 101966 shares, net 0) over 63.1 minutes.",
+            "trade_ids": [
+              "T00091830",
+              "T00091863",
+              "T00091875",
+              "T00091899",
+              "T00091908",
+              "T00091941",
+              "T00091971",
+              "T00091978",
+              "T00091998",
+              "T00092009",
+              "T00092033",
+              "T00092074",
+              "T00092116",
+              "T00092140"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 7.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 7.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 101966.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 63.11666666666667
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 14 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00091830",
+              "T00091863",
+              "T00091875",
+              "T00091899",
+              "T00091908",
+              "T00091941",
+              "T00091971",
+              "T00091978",
+              "T00091998",
+              "T00092009",
+              "T00092033",
+              "T00092074",
+              "T00092116",
+              "T00092140"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 14 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00091830",
+              "T00091863",
+              "T00091875",
+              "T00091899",
+              "T00091908",
+              "T00091941",
+              "T00091971",
+              "T00091978",
+              "T00091998",
+              "T00092009",
+              "T00092033",
+              "T00092074",
+              "T00092116",
+              "T00092140"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: repeated round trips of the same size at almost the same price.",
+            "trade_ids": [
+              "T00091830",
+              "T00091863",
+              "T00091875",
+              "T00091899",
+              "T00091908",
+              "T00091941",
+              "T00091971",
+              "T00091978",
+              "T00091998",
+              "T00092009"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 10.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 14
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 387s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260423-C00156-SC05",
+      "source": "template",
+      "note": {
+        "headline": "C00156 / SC05 / 2026-04-23: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-23 C00156 made 14 trades in SC05 (7 buys, 7 sells, 75220 shares, net 0) over 43.0 minutes.",
+            "trade_ids": [
+              "T00094629",
+              "T00094643",
+              "T00094673",
+              "T00094706",
+              "T00094718",
+              "T00094768",
+              "T00094775",
+              "T00094796",
+              "T00094836",
+              "T00094841",
+              "T00094859",
+              "T00094887",
+              "T00094892",
+              "T00094923"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 7.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 7.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 75220.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 43.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 14 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00094629",
+              "T00094643",
+              "T00094673",
+              "T00094706",
+              "T00094718",
+              "T00094768",
+              "T00094775",
+              "T00094796",
+              "T00094836",
+              "T00094841",
+              "T00094859",
+              "T00094887",
+              "T00094892",
+              "T00094923"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 14 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00094629",
+              "T00094643",
+              "T00094673",
+              "T00094706",
+              "T00094718",
+              "T00094768",
+              "T00094775",
+              "T00094796",
+              "T00094836",
+              "T00094841",
+              "T00094859",
+              "T00094887",
+              "T00094892",
+              "T00094923"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 14
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 366s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260423-C00577-SC05",
+      "source": "template",
+      "note": {
+        "headline": "C00577 / SC05 / 2026-04-23: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-23 C00577 made 14 trades in SC05 (7 buys, 7 sells, 75220 shares, net 0) over 43.0 minutes.",
+            "trade_ids": [
+              "T00094630",
+              "T00094642",
+              "T00094672",
+              "T00094707",
+              "T00094717",
+              "T00094769",
+              "T00094774",
+              "T00094797",
+              "T00094835",
+              "T00094842",
+              "T00094860",
+              "T00094888",
+              "T00094891",
+              "T00094922"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 7.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 7.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 75220.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 43.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 14 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00094630",
+              "T00094642",
+              "T00094672",
+              "T00094707",
+              "T00094717",
+              "T00094769",
+              "T00094774",
+              "T00094797",
+              "T00094835",
+              "T00094842",
+              "T00094860",
+              "T00094888",
+              "T00094891",
+              "T00094922"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 14 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00094630",
+              "T00094642",
+              "T00094672",
+              "T00094707",
+              "T00094717",
+              "T00094769",
+              "T00094774",
+              "T00094797",
+              "T00094835",
+              "T00094842",
+              "T00094860",
+              "T00094888",
+              "T00094891",
+              "T00094922"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 14.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 14
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 403s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260424-C00638-SC05",
+      "source": "template",
+      "note": {
+        "headline": "C00638 / SC05 / 2026-04-24: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-24 C00638 made 22 trades in SC05 (11 buys, 11 sells, 29984 shares, net 0) over 83.3 minutes.",
+            "trade_ids": [
+              "T00096984",
+              "T00097023",
+              "T00097049",
+              "T00097078",
+              "T00097108",
+              "T00097129",
+              "T00097136",
+              "T00097154",
+              "T00097179",
+              "T00097212",
+              "T00097234",
+              "T00097244",
+              "T00097252",
+              "T00097254",
+              "T00097283",
+              "T00097340",
+              "T00097363",
+              "T00097403",
+              "T00097421",
+              "T00097439",
+              "T00097482",
+              "T00097504"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 11.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 11.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 29984.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 83.33333333333333
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 22 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00096984",
+              "T00097023",
+              "T00097049",
+              "T00097078",
+              "T00097108",
+              "T00097129",
+              "T00097136",
+              "T00097154",
+              "T00097179",
+              "T00097212",
+              "T00097234",
+              "T00097244",
+              "T00097252",
+              "T00097254",
+              "T00097283",
+              "T00097340",
+              "T00097363",
+              "T00097403",
+              "T00097421",
+              "T00097439",
+              "T00097482",
+              "T00097504"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 22 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00096984",
+              "T00097023",
+              "T00097049",
+              "T00097078",
+              "T00097108",
+              "T00097129",
+              "T00097136",
+              "T00097154",
+              "T00097179",
+              "T00097212",
+              "T00097234",
+              "T00097244",
+              "T00097252",
+              "T00097254",
+              "T00097283",
+              "T00097340",
+              "T00097363",
+              "T00097403",
+              "T00097421",
+              "T00097439",
+              "T00097482",
+              "T00097504"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 22
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 369s)",
+      "truth": "wash_trade"
+    },
+    {
+      "alert_id": "20260424-C00578-SC05",
+      "source": "template",
+      "note": {
+        "headline": "C00578 / SC05 / 2026-04-24: 2 red flag(s), evidence strong",
+        "findings": [
+          {
+            "text": "On 2026-04-24 C00578 made 22 trades in SC05 (11 buys, 11 sells, 29984 shares, net 0) over 83.3 minutes.",
+            "trade_ids": [
+              "T00096983",
+              "T00097024",
+              "T00097050",
+              "T00097079",
+              "T00097107",
+              "T00097128",
+              "T00097137",
+              "T00097155",
+              "T00097180",
+              "T00097213",
+              "T00097235",
+              "T00097245",
+              "T00097253",
+              "T00097255",
+              "T00097284",
+              "T00097339",
+              "T00097364",
+              "T00097404",
+              "T00097420",
+              "T00097438",
+              "T00097481",
+              "T00097503"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              },
+              {
+                "metric": "buy_count",
+                "value": 11.0
+              },
+              {
+                "metric": "sell_count",
+                "value": 11.0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 29984.0
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0.0
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 83.33333333333333
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 22 trades against itself or a linked account.",
+            "trade_ids": [
+              "T00096983",
+              "T00097024",
+              "T00097050",
+              "T00097079",
+              "T00097107",
+              "T00097128",
+              "T00097137",
+              "T00097155",
+              "T00097180",
+              "T00097213",
+              "T00097235",
+              "T00097245",
+              "T00097253",
+              "T00097255",
+              "T00097284",
+              "T00097339",
+              "T00097364",
+              "T00097404",
+              "T00097420",
+              "T00097438",
+              "T00097481",
+              "T00097503"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              }
+            ]
+          },
+          {
+            "text": "Red flag: 22 trades against one internal counterparty.",
+            "trade_ids": [
+              "T00096983",
+              "T00097024",
+              "T00097050",
+              "T00097079",
+              "T00097107",
+              "T00097128",
+              "T00097137",
+              "T00097155",
+              "T00097180",
+              "T00097213",
+              "T00097235",
+              "T00097245",
+              "T00097253",
+              "T00097255",
+              "T00097284",
+              "T00097339",
+              "T00097364",
+              "T00097404",
+              "T00097420",
+              "T00097438",
+              "T00097481",
+              "T00097503"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 22.0
+              }
+            ]
+          }
+        ],
+        "conclusion": "ESCALATE",
+        "rationale": "Generated from SQL results only, without the language model. The activity is consistent with the red flags listed; an analyst should review the cited trades before deciding."
+      },
+      "checks": [
+        {
+          "attempt": "template",
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 9,
+          "cited_trades": 22
+        }
+      ],
+      "tool_calls": 0,
+      "latency_s": 0.07,
+      "error": "RuntimeError: Groq quota exhausted (retry in 405s)",
+      "truth": "wash_trade"
+    }
+  ]
+}
