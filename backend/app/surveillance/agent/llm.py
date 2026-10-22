@@ -47,6 +47,7 @@ class GroqClient:
             raise RuntimeError("GROQ_API_KEY is not set (environment or .env)")
         self._headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
         self.model, self.base_url, self.temperature = model, base_url.rstrip("/"), temperature
+        self.name = "groq:" + model
         self.max_retries = max_retries
         self.tpm_budget = tpm_budget  # tokens per minute we allow ourselves (the free tier caps at 8000)
         self._window: list[tuple[float, int]] = []
@@ -66,8 +67,9 @@ class GroqClient:
 
     def chat(self, messages: list[dict], tools: list[dict] | None) -> dict:
         body = {"model": self.model, "messages": messages, "temperature": self.temperature,
-                "max_completion_tokens": 2048,
-                "reasoning_effort": "low"}
+                "max_completion_tokens": 2048}
+        if "gpt-oss" in self.model:
+            body["reasoning_effort"] = "low"
         if tools:
             body["tools"] = tools
             body["tool_choice"] = "auto"
@@ -92,6 +94,12 @@ class GroqClient:
                     msg = r.json().get("error", {}).get("message", "")[:300]
                 except ValueError:
                     msg = r.text[:300]
+                if r.status_code == 400 and "attempted to call tool" in msg and "tools" in body:
+                    # gpt-oss sometimes "calls" a tool named json to write its final answer, which Groq
+                    # rejects. Ask again without tools, so the note comes back as plain text.
+                    body = {k: v for k, v in body.items() if k not in ("tools", "tool_choice")}
+                    self.usage["invented_tool_retries"] = self.usage.get("invented_tool_retries", 0) + 1
+                    continue
                 raise RuntimeError(f"Groq API error {r.status_code}: {msg}")
             data = r.json()
             u = data.get("usage") or {}
