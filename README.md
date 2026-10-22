@@ -64,15 +64,27 @@ The model sits in one place. It may choose which read-only queries to run and wr
 
 If the second draft also fails the checker, or the API is down or out of quota, the note is built from SQL alone, with no model.
 
-### Agent status
+### Agent result
 
-The agent and checker are covered by offline tests (the model is stubbed). Against the live Groq model, a single alert
-was drafted and passed the checker on the first try during development, but the 20-alert measurement is **not done**:
-the free-tier key's 200,000 tokens-per-day quota ran out before it could finish. In that attempt all 20 alerts fell
-back to the template note and all 20 template notes passed the checker
-([reports/agent_eval_quota_blocked.json](reports/agent_eval_quota_blocked.json)). That says the fallback works. It says
-nothing about the model's pass rate. To measure it, run `python scripts/run_agent_eval.py` with a key that has quota; it
-writes the first-try and after-retry checker pass rates and latency to `reports/AGENT_EVAL.md`.
+On the 20 top-ranked holdout alerts, with `openai/gpt-oss-120b` on Groq
+([reports/AGENT_EVAL.md](reports/AGENT_EVAL.md)):
+
+| Measure | Value |
+|---|---|
+| Model's note passed the checker on the first draft | 5/20 |
+| Passed after one retry with the checker's feedback | **16/20** |
+| Fell back to the SQL-only note (both drafts failed: 2; API error: 2) | 4/20 |
+| Notes shown to the analyst that passed the checker | 20/20 |
+
+First drafts failed mostly on numbers that no query returned (8) and figures that did not
+match SQL (7); one cited a trade ID that does not exist. That is the checker doing its job:
+none of those reached the analyst. All 20 notes recommended escalation, and all 20 alerts
+were true alerts in the simulator, so this run says nothing yet about how the agent handles
+a false alarm. Latency (median 140 s) is mostly waiting out free-tier rate limits.
+
+The two API errors are a second form of the model calling a tool it was not offered
+(Groq: "tool choice is none, but model called a tool"); the client already recovers from
+the first form.
 
 ## Quick start
 
