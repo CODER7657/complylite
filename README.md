@@ -86,6 +86,18 @@ The two API errors are a second form of the model calling a tool it was not offe
 (Groq: "tool choice is none, but model called a tool"); the client already recovers from
 the first form.
 
+**False alarms.** The 20 alerts above were all true, so the same run was repeated on the 8
+highest-ranked holdout alerts that are not manipulation in the simulator
+([reports/AGENT_EVAL_FALSE.md](reports/AGENT_EVAL_FALSE.md), `--false-alerts 8`). Result: 0
+ESCALATE, 8 REVIEW_FURTHER, 0 DISMISS. 4 passed the checker on the first draft, 8/8 after one
+retry, no fallbacks, no API errors. This is weaker than it sounds. All 8 sit at rank 20 to 28
+with weak or moderate evidence, and the checker does not allow ESCALATE below strong evidence,
+so the code, not the model, ruled out escalation. The model never chose DISMISS, and its
+rationales mostly restated the flagged pattern ("consistent with ... warranting further
+review"). Telling a false alarm from a true one is still done by the evidence level, not by
+the language model. The sample is small (8) and every false alert here is one the ranker
+already scored lower than the true ones.
+
 ## Quick start
 
 Python 3.11. Nothing here needs a GPU or network except the optional model call.
