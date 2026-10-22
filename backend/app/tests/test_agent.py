@@ -183,3 +183,23 @@ def test_groq_client_retries_without_tools_when_the_model_invents_one():
     assert out["content"] == "{\"ok\": true}"
     assert "tools" in bodies[0] and "tools" not in bodies[1]
     assert client.usage["invented_tool_retries"] == 1
+
+
+def test_false_alert_selection_skips_ground_truth_manipulation_and_runs_with_the_stub(tools, dataset):
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
+    from run_agent_eval import load_truth, pick_false_alerts
+
+    truth = load_truth(str(dataset))
+    assert truth, "simulator should label some units"
+    ranked = [r[0] for r in tools.con.execute(
+        "SELECT alert_id FROM alert_scores WHERE split = 'test' AND in_queue ORDER BY final_score DESC, alert_id"
+    ).fetchall()]
+    picked = pick_false_alerts(tools.con, truth, 5)
+    assert 0 < len(picked) <= 5
+    assert all(a not in truth for a in picked)
+    assert picked == [a for a in ranked if a not in truth][:len(picked)]
+    res = draft_case_note(picked[0], tools, StubLLM())
+    assert res.checks[-1]["passed"]

@@ -1,0 +1,873 @@
+{
+  "summary": {
+    "llm": "groq:openai/gpt-oss-120b",
+    "alerts": 8,
+    "pass_first_try": 4,
+    "pass_after_retry": 4,
+    "fallback_template": 0,
+    "template_passed_checker": 0,
+    "api_errors": 0,
+    "pass_rate_first_try": 0.5,
+    "pass_rate_after_retry": 1.0,
+    "latency_s": {
+      "median": 62.0,
+      "p95": 185.7,
+      "max": 185.7
+    },
+    "wall_clock_s": 648.6,
+    "mean_tool_calls": 2.2,
+    "first_try_failure_reasons": {
+      "fact did not match SQL": 2,
+      "number in text not traceable to data": 3
+    },
+    "conclusion_vs_truth": {
+      "true_alert": {},
+      "false_alert": {
+        "REVIEW_FURTHER": 8
+      }
+    },
+    "usage": {
+      "prompt_tokens": 39274,
+      "completion_tokens": 9568,
+      "requests": 30,
+      "rate_limit_waits": 23,
+      "invented_tool_retries": 6
+    }
+  },
+  "results": [
+    {
+      "alert_id": "20260420-C00211-SC10",
+      "source": "llm_first_try",
+      "note": {
+        "headline": "Round\u2011trip trade of 2,449 shares at near\u2011identical prices",
+        "findings": [
+          {
+            "text": "Client bought 2,449 shares at 126.3 and sold the same quantity at 125.9 within 35 minutes, matching quantities exactly.",
+            "trade_ids": [
+              "T00086993",
+              "T00087207"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 4898
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0
+              },
+              {
+                "metric": "total_value",
+                "value": 617637.8
+              },
+              {
+                "metric": "min_price",
+                "value": 125.9
+              },
+              {
+                "metric": "max_price",
+                "value": 126.3
+              },
+              {
+                "metric": "vwap",
+                "value": 126.1
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 35
+              },
+              {
+                "metric": "distinct_counterparties",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "The exact round\u2011trip quantity and short holding period are consistent with the model's high score, warranting further review."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 5,
+          "cited_trades": 2
+        }
+      ],
+      "tool_calls": 2,
+      "latency_s": 4.33,
+      "error": null,
+      "truth": "none"
+    },
+    {
+      "alert_id": "20260417-C00049-LC17",
+      "source": "llm_after_retry",
+      "note": {
+        "headline": "Client C00049 executed a near\u2011identical round\u2011trip trade in LC17",
+        "findings": [
+          {
+            "text": "A buy of 147 shares at 2095.10 was sold 4\u202fmin later at 2089.75, matching the round\u2011trip quantity exactly.",
+            "trade_ids": [
+              "T00085244",
+              "T00085271"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 294
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0
+              },
+              {
+                "metric": "min_price",
+                "value": 2089.75
+              },
+              {
+                "metric": "max_price",
+                "value": 2095.1
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 3.95
+              }
+            ]
+          },
+          {
+            "text": "Overall the client placed five trades totaling 265\u202fshares bought and 147\u202fshares sold, with a VWAP of about 2093.92 for the buys.",
+            "trade_ids": [
+              "T00083827",
+              "T00083882",
+              "T00084305",
+              "T00085244",
+              "T00085271"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 5
+              },
+              {
+                "metric": "buy_count",
+                "value": 4
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 412
+              },
+              {
+                "metric": "net_quantity",
+                "value": 118
+              },
+              {
+                "metric": "total_value",
+                "value": 862082.7
+              },
+              {
+                "metric": "min_price",
+                "value": 2089.3
+              },
+              {
+                "metric": "max_price",
+                "value": 2095.35
+              },
+              {
+                "metric": "vwap",
+                "value": 2093.9225
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "The exact quantity round\u2011trip and short holding time are consistent with the model's flagged pattern, warranting further review."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": false,
+          "failures": [
+            "finding 1: fact time_span_minutes = 4 but the cited trades give 3.95"
+          ],
+          "checked_numbers": 7,
+          "cited_trades": 5
+        },
+        {
+          "attempt": 2,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 7,
+          "cited_trades": 5
+        }
+      ],
+      "tool_calls": 3,
+      "latency_s": 120.09,
+      "error": null,
+      "truth": "none"
+    },
+    {
+      "alert_id": "20260417-C00160-SC01",
+      "source": "llm_first_try",
+      "note": {
+        "headline": "Single sell trade of 6 shares at \u20b9107.4 on 2026-04-17",
+        "findings": [
+          {
+            "text": "The client sold 6 shares at a price of \u20b9107.4, resulting in a net sell of 6 shares.",
+            "trade_ids": [
+              "T00083869"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "buy_count",
+                "value": 0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 6
+              },
+              {
+                "metric": "net_quantity",
+                "value": -6
+              },
+              {
+                "metric": "total_value",
+                "value": 644.4
+              },
+              {
+                "metric": "min_price",
+                "value": 107.4
+              },
+              {
+                "metric": "max_price",
+                "value": 107.4
+              },
+              {
+                "metric": "vwap",
+                "value": 107.4
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 0
+              },
+              {
+                "metric": "distinct_counterparties",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "Only a single trade was executed, matching the alert's weak evidence; further review is warranted to assess any pattern."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 5,
+          "cited_trades": 1
+        }
+      ],
+      "tool_calls": 1,
+      "latency_s": 59.04,
+      "error": null,
+      "truth": "none"
+    },
+    {
+      "alert_id": "20260422-C00710-LC12",
+      "source": "llm_after_retry",
+      "note": {
+        "headline": "Round\u2011trip of 79 shares detected for LC12",
+        "findings": [
+          {
+            "text": "Client C00710 sold 79 shares at 2563.2 and bought 79 shares at 2560.5 within 4 minutes, resulting in a zero net position.",
+            "trade_ids": [
+              "T00091092",
+              "T00091117"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 158
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0
+              },
+              {
+                "metric": "total_value",
+                "value": 404772.3
+              },
+              {
+                "metric": "min_price",
+                "value": 2560.5
+              },
+              {
+                "metric": "max_price",
+                "value": 2563.2
+              },
+              {
+                "metric": "vwap",
+                "value": 2561.85
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 3.9
+              },
+              {
+                "metric": "distinct_counterparties",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "The identical buy and sell quantities and short time gap are consistent with a potential wash\u2011trade pattern, warranting further review."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": false,
+          "failures": [
+            "headline: the number 2026 does not match any figure returned by the tools or the facts",
+            "headline: the number 22 does not match any figure returned by the tools or the facts"
+          ],
+          "checked_numbers": 8,
+          "cited_trades": 2
+        },
+        {
+          "attempt": 2,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 6,
+          "cited_trades": 2
+        }
+      ],
+      "tool_calls": 3,
+      "latency_s": 67.53,
+      "error": null,
+      "truth": "none"
+    },
+    {
+      "alert_id": "20260423-C00697-LC16",
+      "source": "llm_first_try",
+      "note": {
+        "headline": "Identical round\u2011trip trade detected for client C00697 on LC16",
+        "findings": [
+          {
+            "text": "Client bought 18 shares at 2061.75 and sold the same 18 shares at 2039.95 on the same day, resulting in a net zero position.",
+            "trade_ids": [
+              "T00094114",
+              "T00094638"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 36
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0
+              },
+              {
+                "metric": "total_value",
+                "value": 73830.6
+              },
+              {
+                "metric": "min_price",
+                "value": 2039.95
+              },
+              {
+                "metric": "max_price",
+                "value": 2061.75
+              },
+              {
+                "metric": "vwap",
+                "value": 2050.85
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 103
+              },
+              {
+                "metric": "distinct_counterparties",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "The exact matching buy and sell quantities with a short intraday interval are consistent with a potential wash\u2011trade pattern and merit further review."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 4,
+          "cited_trades": 2
+        }
+      ],
+      "tool_calls": 2,
+      "latency_s": 59.85,
+      "error": null,
+      "truth": "none"
+    },
+    {
+      "alert_id": "20260417-C00509-LC07",
+      "source": "llm_after_retry",
+      "note": {
+        "headline": "Client C00509 executed two round\u2011trip trades in LC07",
+        "findings": [
+          {
+            "text": "A 14\u2011share buy at \u20b92,463.90 was sold after about 2.02 minutes at \u20b92,467.70, closing the position.",
+            "trade_ids": [
+              "T00084444",
+              "T00084456"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 28
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0
+              },
+              {
+                "metric": "total_value",
+                "value": 69042.4
+              },
+              {
+                "metric": "min_price",
+                "value": 2463.9
+              },
+              {
+                "metric": "max_price",
+                "value": 2467.7
+              },
+              {
+                "metric": "vwap",
+                "value": 2465.8
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 2.02
+              }
+            ]
+          },
+          {
+            "text": "A 26\u2011share buy at \u20b92,511.85 was sold after about 3.77 minutes at \u20b92,512.50, also closing the position.",
+            "trade_ids": [
+              "T00085013",
+              "T00085047"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 52
+              },
+              {
+                "metric": "net_quantity",
+                "value": 0
+              },
+              {
+                "metric": "total_value",
+                "value": 130633.1
+              },
+              {
+                "metric": "min_price",
+                "value": 2511.85
+              },
+              {
+                "metric": "max_price",
+                "value": 2512.5
+              },
+              {
+                "metric": "vwap",
+                "value": 2512.17
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 3.77
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "The trades form two exact round\u2011trip patterns with matching quantities and very short intervals, matching the model's highlighted features; however the evidence level is weak, so further review is warranted."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": false,
+          "failures": [
+            "finding 1: fact total_value = 103590 but the cited trades give 69042.4",
+            "finding 1: fact vwap = 3706.79 but the cited trades give 2465.8",
+            "finding 1: fact time_span_minutes = 2 but the cited trades give 2.01667",
+            "finding 2: fact time_span_minutes = 3 but the cited trades give 3.76667",
+            "headline: the number 2026 does not match any figure returned by the tools or the facts",
+            "headline: the number 17 does not match any figure returned by the tools or the facts",
+            "finding 2: the number 3 does not match any figure returned by the tools or the facts"
+          ],
+          "checked_numbers": 11,
+          "cited_trades": 4
+        },
+        {
+          "attempt": 2,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 8,
+          "cited_trades": 4
+        }
+      ],
+      "tool_calls": 4,
+      "latency_s": 185.7,
+      "error": null,
+      "truth": "none"
+    },
+    {
+      "alert_id": "20260415-C00445-SC06",
+      "source": "llm_after_retry",
+      "note": {
+        "headline": "Client C00445 executed predominantly buy trades in SC06 on 2026-04-15 with limited selling activity",
+        "findings": [
+          {
+            "text": "Across three trades the client bought 2 times and sold once, resulting in a net long of 523 shares.",
+            "trade_ids": [
+              "T00078271",
+              "T00079119",
+              "T00079936"
+            ],
+            "facts": [
+              {
+                "metric": "buy_count",
+                "value": 2
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 719
+              },
+              {
+                "metric": "net_quantity",
+                "value": 523
+              },
+              {
+                "metric": "total_value",
+                "value": 108467.25
+              },
+              {
+                "metric": "min_price",
+                "value": 150.65
+              },
+              {
+                "metric": "max_price",
+                "value": 151.2
+              },
+              {
+                "metric": "vwap",
+                "value": 150.86
+              },
+              {
+                "metric": "time_span_minutes",
+                "value": 265
+              },
+              {
+                "metric": "distinct_counterparties",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "text": "Two trades were with internal counterparty C00292, one buy of 384 shares and one sell of 98 shares.",
+            "trade_ids": [
+              "T00078271",
+              "T00079119"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 482
+              },
+              {
+                "metric": "net_quantity",
+                "value": 286
+              },
+              {
+                "metric": "total_value",
+                "value": 72763.2
+              },
+              {
+                "metric": "min_price",
+                "value": 150.9
+              },
+              {
+                "metric": "max_price",
+                "value": 151.2
+              },
+              {
+                "metric": "vwap",
+                "value": 151.03
+              }
+            ]
+          },
+          {
+            "text": "One buy trade of 237 shares was executed against the external market.",
+            "trade_ids": [
+              "T00079936"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 1
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 0
+              },
+              {
+                "metric": "total_quantity",
+                "value": 237
+              },
+              {
+                "metric": "net_quantity",
+                "value": 237
+              },
+              {
+                "metric": "total_value",
+                "value": 35704.05
+              },
+              {
+                "metric": "min_price",
+                "value": 150.65
+              },
+              {
+                "metric": "max_price",
+                "value": 150.65
+              },
+              {
+                "metric": "vwap",
+                "value": 150.65
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "The client showed a strong buying bias during a price run-up, with limited selling and a net long position, consistent with the flagged one-sided trading pattern."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": false,
+          "failures": [
+            "finding 1: the number 621 does not match any figure returned by the tools or the facts"
+          ],
+          "checked_numbers": 6,
+          "cited_trades": 3
+        },
+        {
+          "attempt": 2,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 5,
+          "cited_trades": 3
+        }
+      ],
+      "tool_calls": 1,
+      "latency_s": 63.48,
+      "error": null,
+      "truth": "none"
+    },
+    {
+      "alert_id": "20260417-C00331-SC06",
+      "source": "llm_first_try",
+      "note": {
+        "headline": "Client C00331 executed mixed buy and sell trades in SC06 on 2026-04-17 with notable size and price spread",
+        "findings": [
+          {
+            "text": "The client placed one sell order for 935 shares at \u20b9152.05 and one buy order for 646 shares at \u20b9123.00, resulting in a net short position of 289 shares.",
+            "trade_ids": [
+              "T00083456",
+              "T00085415"
+            ],
+            "facts": [
+              {
+                "metric": "trade_count",
+                "value": 2
+              },
+              {
+                "metric": "buy_count",
+                "value": 1
+              },
+              {
+                "metric": "sell_count",
+                "value": 1
+              },
+              {
+                "metric": "total_quantity",
+                "value": 1581
+              },
+              {
+                "metric": "net_quantity",
+                "value": -289
+              },
+              {
+                "metric": "total_value",
+                "value": 221624.75
+              },
+              {
+                "metric": "min_price",
+                "value": 123.0
+              },
+              {
+                "metric": "max_price",
+                "value": 152.05
+              },
+              {
+                "metric": "vwap",
+                "value": 140.28
+              }
+            ]
+          },
+          {
+            "text": "The two trades were spaced 324 minutes apart, indicating activity across the trading session.",
+            "trade_ids": [
+              "T00083456",
+              "T00085415"
+            ],
+            "facts": [
+              {
+                "metric": "time_span_minutes",
+                "value": 324
+              },
+              {
+                "metric": "distinct_counterparties",
+                "value": 1
+              }
+            ]
+          }
+        ],
+        "conclusion": "REVIEW_FURTHER",
+        "rationale": "The mixed buy/sell activity with a sizable net short position and a wide price range is consistent with the weak evidence flagged by the model, warranting further review."
+      },
+      "checks": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "checked_numbers": 6,
+          "cited_trades": 2
+        }
+      ],
+      "tool_calls": 2,
+      "latency_s": 60.54,
+      "error": null,
+      "truth": "none"
+    }
+  ]
+}
