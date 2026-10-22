@@ -172,8 +172,10 @@ def test_groq_client_retries_without_tools_when_the_model_invents_one():
         body = json.loads(request.content)
         bodies.append(body)
         if "tools" in body:
-            return httpx.Response(400, json={"error": {"message": "Tool call validation failed: attempted to call tool 'json' which was not in request.tools"}})
-        return httpx.Response(200, json={"choices": [{"message": {"content": "{\"ok\": true}"}}], "usage": {"total_tokens": 10}})
+            msg = "Tool call validation failed: attempted to call tool 'json' which was not in request.tools"
+            return httpx.Response(400, json={"error": {"message": msg}})
+        reply = {"choices": [{"message": {"content": "{\"ok\": true}"}}], "usage": {"total_tokens": 10}}
+        return httpx.Response(200, json=reply)
 
     client = GroqClient(api_key="test-not-real")
     client._http = httpx.Client(transport=httpx.MockTransport(handler))

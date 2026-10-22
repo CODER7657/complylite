@@ -69,7 +69,10 @@ def main():
         import app.surveillance.agent.llm as llm_module
 
         llm_module.MAX_WAIT_S = args.max_wait
-    llm = (GroqClient(model=args.model) if args.model else GroqClient()) if args.llm == "groq" else StubLLM(mistakes=1 if args.llm == "stub-mistakes" else 0)
+    if args.llm == "groq":
+        llm = GroqClient(model=args.model) if args.model else GroqClient()
+    else:
+        llm = StubLLM(mistakes=1 if args.llm == "stub-mistakes" else 0)
     alerts = pick_alerts(tools.con, args.n)
     lab = duckdb.connect(str(Path(args.data) / LABELS_DB), read_only=True)
     truth = {f"{d.strftime('%Y%m%d')}-{c}-{s}": p for c, s, d, p in lab.execute(
