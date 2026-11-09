@@ -36,6 +36,7 @@ left out of training the model's recall for it in the daily queue falls to 0.69 
 0.04 (pump and dump) and 0.00 (front running). A harder simulator preset gives LightGBM PR-AUC 0.95. Full tables, setup
 and caveats: [reports/EVAL.md](reports/EVAL.md), [reports/EVAL_HARD.md](reports/EVAL_HARD.md) and
 [reports/EDA.md](reports/EDA.md). All three, and `reports/metrics.json`, are written by scripts in `scripts/`.
+What would change on a real order book, and how to plug one in: [docs/DATA_STORY.md](docs/DATA_STORY.md).
 
 ## Where the language model is and is not allowed
 
