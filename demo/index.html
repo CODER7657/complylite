@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ComplyLite: the ranked alert queue (simulated market)</title>
+<meta name="description" content="The daily surveillance queue ComplyLite ranks for a broker's compliance analyst, on ten simulated holdout days, with the reasons for every alert.">
+<style>
+  :root { --bg:#111111; --surface:#1A1A1A; --text:#FFFFFF; --accent:#D8141B; --muted:#9A9A9A; --rule:#2E2E2E; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 Inter, "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif; font-variant-numeric:tabular-nums; }
+  .wrap { max-width:1120px; margin:0 auto; padding:clamp(16px,4vw,40px); }
+  .sim { border-left:3px solid var(--muted); padding:8px 12px; color:var(--muted); font-size:14px; margin:0 0 28px; }
+  h1 { font-size:clamp(2rem,1.2rem + 4vw,4.2rem); line-height:.95; letter-spacing:-.03em; margin:0 0 12px; font-weight:800; }
+  .lede { color:var(--muted); max-width:62ch; margin:0 0 28px; }
+  .facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); border-top:1px solid var(--text); margin:0 0 28px; }
+  .facts div { padding:12px 12px 12px 0; }
+  .facts dt { color:var(--muted); font-size:13px; } .facts dd { margin:2px 0 0; font-size:1.6rem; font-weight:700; }
+  .bar { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin:0 0 12px; }
+  label { color:var(--muted); font-size:14px; }
+  select { background:var(--surface); color:var(--text); border:1px solid var(--muted); min-height:44px; padding:0 12px; font:inherit; }
+  select:focus-visible, button:focus-visible, a:focus-visible { outline:2px solid var(--text); outline-offset:2px; }
+  .count { color:var(--muted); font-size:14px; }
+  .scroll { overflow-x:auto; border-top:1px solid var(--text); }
+  table { width:100%; border-collapse:collapse; min-width:640px; }
+  th { text-align:left; color:var(--muted); font-weight:500; font-size:13px; padding:10px 8px; border-bottom:1px solid var(--rule); }
+  td { padding:10px 8px; border-bottom:1px solid var(--rule); vertical-align:top; }
+  td.rank { font-size:2rem; font-weight:800; line-height:1; width:72px; }
+  tr.real td.rank { color:var(--accent); }
+  .pat { font-size:13px; text-transform:uppercase; letter-spacing:.06em; }
+  .pat::before { content:""; display:inline-block; width:10px; height:10px; margin-right:8px; background:var(--accent); vertical-align:-1px; }
+  .muted { color:var(--muted); }
+  button.row { all:unset; cursor:pointer; display:flex; align-items:flex-start; min-height:44px; line-height:1.5; }
+  tr.detail td { background:var(--surface); }
+  .detail h3 { font-size:13px; color:var(--muted); font-weight:500; margin:0 0 6px; }
+  .detail ul { margin:0 0 12px; padding-left:18px; }
+  .cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
+  footer { color:var(--muted); font-size:14px; margin-top:32px; border-top:1px solid var(--rule); padding-top:16px; }
+  a { color:var(--text); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="sim">All data here is simulated: there are no real clients, orders or trades. Red marks alerts the simulator planted as manipulation, shown so you can see which queued alerts were real.</p>
+  <h1>THE QUEUE<br>AN ANALYST GETS.</h1>
+  <p class="lede">Each holdout day, ComplyLite ranks every client-symbol pair and puts the 50 most likely to be manipulation first, rules plus LightGBM, with the reasons for each. The model never saw these days in training.</p>
+  <dl class="facts" id="facts"></dl>
+  <div class="bar">
+    <label for="day">Holdout day</label>
+    <select id="day"></select>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+  <div class="scroll">
+    <table aria-label="Ranked alerts for the selected day">
+      <thead><tr><th scope="col">Rank</th><th scope="col">Client · symbol</th><th scope="col">Score</th><th scope="col">Rules fired</th><th scope="col">Evidence</th><th scope="col">Simulator label</th></tr></thead>
+      <tbody id="rows"><tr><td colspan="6" class="muted">Loading…</td></tr></tbody>
+    </table>
+  </div>
+  <footer>Measured on all ten days: precision 0.50 in the daily top 50 (the best possible is 0.51), 101 false alarms per 10,000 trades against 161 for fixed rules. <a href="https://github.com/CODER7657/complylite">Code, method and limits</a> · <a href="https://github.com/CODER7657/complylite/blob/main/docs/DATA_STORY.md">what changes on a real order book</a>.</footer>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, props = {}, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids.filter((k) => k != null)); return n; };
+const pretty = (s) => s.replace(/_/g, " ");
+let doc;
+
+function render(day) {
+  const rows = doc.days[day];
+  const real = rows.filter((r) => r.pattern).length;
+  $("count").textContent = `${rows.length} alerts · ${real} were planted manipulation`;
+  $("rows").replaceChildren(...rows.flatMap((r, i) => {
+    const id = `d${i}`;
+    const tr = el("tr", { className: r.pattern ? "real" : "" },
+      el("td", { className: "rank" }, String(r.rank)),
+      el("td", {}, el("button", { className: "row", ariaExpanded: "false", ariaControls: id, textContent: `${r.client} · ${r.symbol}` })),
+      el("td", {}, r.score.toFixed(3)),
+      el("td", {}, r.rules.length ? r.rules.map(pretty).join(", ") : el("span", { className: "muted" }, "none")),
+      el("td", {}, r.evidence),
+      el("td", {}, r.pattern ? el("span", { className: "pat" }, pretty(r.pattern)) : el("span", { className: "muted" }, "none")));
+    const detail = el("tr", { className: "detail", id, hidden: true },
+      el("td", { colSpan: 6 }, el("div", { className: "cols" },
+        el("div", {}, el("h3", {}, "Red flags"), el("ul", {}, ...(r.flags.length ? r.flags.map((f) => el("li", {}, f.text)) : [el("li", {}, "none")]))),
+        el("div", {}, el("h3", {}, "Top model reasons"), el("ul", {}, ...r.reasons.map((x) => el("li", {}, `${pretty(x.feature)} (+${x.contribution})`)))))));
+    const btn = tr.querySelector("button");
+    btn.addEventListener("click", () => { const open = detail.hidden; detail.hidden = !open; btn.setAttribute("aria-expanded", String(open)); });
+    return [tr, detail];
+  }));
+}
+
+fetch("queue.json").then((r) => r.json()).then((d) => {
+  doc = d;
+  const days = Object.keys(d.days);
+  const all = days.flatMap((k) => d.days[k]);
+  $("facts").replaceChildren(
+    ...[["Holdout days", days.length], ["Alerts queued", all.length], ["Were planted manipulation", all.filter((r) => r.pattern).length], ["Precision in top 50", (all.filter((r) => r.pattern).length / all.length).toFixed(2)]]
+      .map(([k, v]) => el("div", {}, el("dt", {}, k), el("dd", {}, String(v)))));
+  $("day").replaceChildren(...days.map((k) => el("option", { value: k, textContent: k })));
+  $("day").addEventListener("change", (e) => render(e.target.value));
+  render(days[0]);
+}).catch(() => { $("rows").replaceChildren(el("tr", {}, el("td", { colSpan: 6 }, "The queue could not be loaded."))); });
+</script>
+</body>
+</html>
