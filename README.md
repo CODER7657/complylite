@@ -99,6 +99,13 @@ review"). Telling a false alarm from a true one is still done by the evidence le
 the language model. The sample is small (8) and every false alert here is one the ranker
 already scored lower than the true ones.
 
+## Demo
+
+**Live:** [complylite-demo.vercel.app](https://complylite-demo.vercel.app): the daily ranked queue on the ten
+simulated holdout days, with the rules fired, red flags and top model reasons for every alert. It is a static
+page reading `demo/queue.json`, exported from the evaluation by `scripts/export_demo.py`; no model or server
+runs. All data is simulated.
+
 ## Quick start
 
 Python 3.11. Nothing here needs a GPU or network except the optional model call.
