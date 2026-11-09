@@ -7,6 +7,12 @@ updates:
     groups:
       python-dependencies:
         patterns: ["*"]
+    ignore:
+      # numpy 2.5 requires Python >= 3.12; CI, the Docker image and the README target
+      # 3.11, so a group containing it can never install (#12). Lift this when the
+      # project moves to 3.12.
+      - dependency-name: "numpy"
+        versions: [">=2.5"]
   - package-ecosystem: npm
     directory: /frontend
     schedule:
