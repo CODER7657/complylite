@@ -150,4 +150,4 @@ To measure the agent: `python scripts/run_agent_eval.py` (Groq, 20 alerts, paced
 | `.github/workflows/ci.yml` | Tests, lint of the surveillance code, and a tiny-dataset eval smoke test |
 
 The repository also contains the earlier upload-and-rules dashboard (`frontend/`, the `/api/v1/alerts` and
-`/api/v1/data` routes). It is separate from the surveillance pipeline above.
+`/api/v1/data` routes). It is separate from the surveillance pipeline above: a CSV uploaded there is checked by the old rules only and never reaches the ranked queue (see [docs/DATA_STORY.md](docs/DATA_STORY.md)).
