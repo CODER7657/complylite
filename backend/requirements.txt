@@ -1,7 +1,7 @@
-fastapi==0.162.4
+fastapi==0.163.2
 uvicorn[standard]==0.54.0
 pydantic==2.14.3
-pydantic-settings==2.16.2
+pydantic-settings==2.16.3
 duckdb==2.0.0
 pandas==3.1.1
 numpy==2.4.6
@@ -9,11 +9,11 @@ scikit-learn==1.9.1
 lightgbm==4.7.0
 matplotlib==3.11.2
 httpx==0.28.1
-python-multipart==0.0.33
+python-multipart==0.0.34
 jinja2==3.1.6
 python-jose[cryptography]==3.5.0
 structlog==26.1.0
 pyyaml==6.0.3
 pytest==9.2.0
-ruff==0.17.4
+ruff==0.17.5
 hypothesis==6.170.15
